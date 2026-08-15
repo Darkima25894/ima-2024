@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Termux · web console with API</title>
+  <title>Termux · Full Package Manager + DARK-DDoS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -32,8 +32,8 @@
     .terminal {
       background: #141a20;
       width: 100%;
-      height: 60vh;
-      max-height: 500px;
+      height: 70vh;
+      max-height: 600px;
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
       display: flex;
@@ -110,6 +110,27 @@
       border-radius: 4px;
       border-left: 3px solid #ffd54f;
     }
+    .output-line.git {
+      color: #f09433;
+      background: #1a1a1a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #f09433;
+    }
+    .output-line.package {
+      color: #7cb8f0;
+      background: #0a1a2a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #7cb8f0;
+    }
+    .output-line.download {
+      color: #f0a030;
+      background: #1a1a0a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #f0a030;
+    }
     .input-line {
       display: flex;
       align-items: center;
@@ -156,6 +177,27 @@
       border-radius: 40px;
       color: #95b3cc;
     }
+    .badge-git {
+      background: #2a1a0a;
+      color: #f09433;
+      border: 1px solid #f09433;
+    }
+    .badge-package {
+      background: #0a1a2a;
+      color: #7cb8f0;
+      border: 1px solid #7cb8f0;
+    }
+    .badge-ddos {
+      background: #2a0a0a;
+      color: #ff4444;
+      border: 1px solid #ff4444;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
     .api-section {
       background: #141a20;
       border-radius: 20px;
@@ -174,21 +216,6 @@
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
-    }
-    .api-controls input {
-      background: #1a232c;
-      border: 1px solid #2f3b48;
-      border-radius: 8px;
-      padding: 8px 14px;
-      color: #d4e2ed;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      flex: 1;
-      min-width: 200px;
-      outline: none;
-    }
-    .api-controls input:focus {
-      border-color: #4a6a8a;
     }
     .btn {
       background: #1e2b36;
@@ -222,6 +249,15 @@
     .btn-danger:hover {
       background: #6a3a3a;
       border-color: #8a4a4a;
+    }
+    .btn-git {
+      background: #2a1a0a;
+      border-color: #f09433;
+      color: #f09433;
+    }
+    .btn-git:hover {
+      background: #3a2a1a;
+      border-color: #f0a344;
     }
     .api-key-display {
       background: #0a0e14;
@@ -259,7 +295,7 @@
       margin-left: 8px;
     }
     @media (max-width: 600px) {
-      .terminal { height: 50vh; max-height: 50vh; }
+      .terminal { height: 60vh; max-height: 60vh; }
       .api-controls { flex-direction: column; align-items: stretch; }
       .api-key-display { min-width: unset; }
     }
@@ -274,15 +310,15 @@
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
       </div>
-      <span class="terminal-title">termux · web + API</span>
+      <span class="terminal-title">termux · DARK-DDoS</span>
       <span class="vercel-badge">▲ VERCEL</span>
       <span style="flex:1;"></span>
-      <span style="color:#3d5366; font-size:0.8rem;">⬢ v2.0</span>
+      <span style="color:#3d5366; font-size:0.8rem;">⬢ v4.0</span>
     </div>
     <div class="console-wrap" id="consoleOutput">
-      <div class="output-line system">⏣ Termux console · file database + API</div>
-      <div class="output-line system">⏣ type 'help' for available commands</div>
-      <div class="output-line system">⏣ API key generated on page load</div>
+      <div class="output-line system">⏣ Termux console · Full Package Manager</div>
+      <div class="output-line system">⏣ Commands: apt-get, pip, npm, wget, git</div>
+      <div class="output-line system">⏣ DARK-DDoS installation workflow ready</div>
       <div class="output-line" style="margin-top:6px;">─</div>
     </div>
     <div class="input-line">
@@ -290,8 +326,10 @@
       <input type="text" id="cmdInput" placeholder="type command …" autofocus spellcheck="false" autocomplete="off">
     </div>
     <div class="status-bar">
-      <span>📁 virtual files: <span id="fileCount">0</span></span>
-      <span class="badge">🔑 API ready (client-side)</span>
+      <span>📁 files: <span id="fileCount">0</span></span>
+      <span class="badge badge-git">🔀 Git</span>
+      <span class="badge badge-package">📦 Packages</span>
+      <span class="badge badge-ddos">💀 DARK-DDoS</span>
     </div>
   </div>
 
@@ -302,29 +340,77 @@
       <button class="btn btn-primary" id="generateApiKeyBtn">🔄 Generate New</button>
       <button class="btn btn-danger" id="revokeApiKeyBtn">🗑️ Revoke</button>
       <button class="btn" id="copyApiKeyBtn">📋 Copy</button>
+      <button class="btn btn-git" id="installDdosBtn">💀 Install DARK-DDoS</button>
     </div>
     <div class="api-info">
       <strong>🔗 API Endpoint:</strong> <code id="apiEndpoint">/api/termux</code> &nbsp;|&nbsp;
       <strong>Method:</strong> <code>POST</code> &nbsp;|&nbsp;
       <strong>Headers:</strong> <code>X-API-Key: YOUR_KEY</code> &nbsp;|&nbsp;
-      <strong>Body:</strong> <code>{"command": "ls -la"}</code>
+      <strong>Body:</strong> <code>{"command": "apt-get install python3 -y"}</code>
       <br>
-      <span style="color:#5a7388; font-size:0.7rem;">💡 API executes commands on client-side (localStorage). All commands are logged to console.</span>
-      <br>
-      <span style="color:#5a7388; font-size:0.7rem;">✅ This works on Vercel as a static site. No serverless functions needed.</span>
+      <span style="color:#5a7388; font-size:0.7rem;">💡 Supports apt-get, pip, npm, wget, git clone, and DARK-DDoS installation.</span>
     </div>
   </div>
 </div>
 
 <script>
   (function() {
-    // ------ FILE DATABASE (client-side localStorage) ------
+    // ------ FILE DATABASE ------
     const STORAGE_KEY = 'termux_fs_db';
     const API_KEY_STORAGE = 'termux_api_key';
+    const GIT_REPOS_KEY = 'termux_git_repos';
+    const PACKAGES_KEY = 'termux_packages';
     let fs = {};
     let apiKey = '';
+    let gitRepos = {};
+    let installedPackages = {};
 
-    // Load or generate API key
+    // Load installed packages
+    function loadPackages() {
+      try {
+        const raw = localStorage.getItem(PACKAGES_KEY);
+        if (raw) {
+          installedPackages = JSON.parse(raw);
+          return;
+        }
+      } catch (_) {}
+      installedPackages = {
+        'git': '2.30.0',
+        'python3': '3.9.0',
+        'nodejs': '14.17.0',
+        'npm': '6.14.13',
+        'curl': '7.68.0',
+        'wget': '1.20.3'
+      };
+      savePackages();
+    }
+
+    function savePackages() {
+      try {
+        localStorage.setItem(PACKAGES_KEY, JSON.stringify(installedPackages));
+      } catch (_) {}
+    }
+
+    // Load Git repositories
+    function loadGitRepos() {
+      try {
+        const raw = localStorage.getItem(GIT_REPOS_KEY);
+        if (raw) {
+          gitRepos = JSON.parse(raw);
+          return;
+        }
+      } catch (_) {}
+      gitRepos = {};
+      saveGitRepos();
+    }
+
+    function saveGitRepos() {
+      try {
+        localStorage.setItem(GIT_REPOS_KEY, JSON.stringify(gitRepos));
+      } catch (_) {}
+    }
+
+    // Load API key
     function loadApiKey() {
       const stored = localStorage.getItem(API_KEY_STORAGE);
       if (stored) {
@@ -365,7 +451,9 @@
       } catch (_) {}
       fs = {
         '/home/welcome.txt': 'Welcome to Termux web!\nUse "ls", "cat", "echo", "touch", "rm", "mkdir", "cd", "pwd"',
-        '/home/.profile': 'alias ll="ls -l"',
+        '/home/.profile': 'alias ll="ls -l"\nalias gs="git status"\nalias python=python3',
+        '/home/README.md': '# Termux Web Console\n\nA web-based Termux emulator with full package manager.',
+        '/home/install.sh': '#!/bin/bash\necho "Installing DARK-DDoS..."\ngit clone https://github.com/MASTERBOYK/DARK-DDoS.git\ncd DARK-DDoS\nnpm install\npython3 MASTER-DDOS.py'
       };
       saveFS();
     }
@@ -434,7 +522,154 @@
       return Array.from(entries).sort();
     }
 
-    // Command executor (returns output array)
+    // Install DARK-DDoS full workflow
+    function installDarkDdos(output) {
+      function print(line, type = 'package') {
+        output.push({ line, type });
+      }
+
+      print('╔═══════════════════════════════════════════════════════╗', 'system');
+      print('║         Installing DARK-DDoS Tool Suite              ║', 'system');
+      print('╚═══════════════════════════════════════════════════════╝', 'system');
+      print('');
+
+      // Step 1: Install packages
+      const packages = ['git', 'golang', 'perl', 'python3', 'python2', 'python3-pip', 'nodejs', 'npm'];
+      for (const pkg of packages) {
+        if (!installedPackages[pkg]) {
+          print(`[${packages.indexOf(pkg) + 1}/${packages.length}] Installing ${pkg}...`, 'package');
+          installedPackages[pkg] = 'latest';
+          print(`✅ ${pkg} installed successfully`, 'success');
+        } else {
+          print(`⏭️ ${pkg} already installed (${installedPackages[pkg]})`, 'package');
+        }
+      }
+      savePackages();
+
+      // Step 2: Clone repository
+      print('');
+      print('📥 Cloning DARK-DDoS repository...', 'download');
+      const repoUrl = 'https://github.com/MASTERBOYK/DARK-DDoS.git';
+      const repoName = 'DARK-DDoS';
+      
+      if (gitRepos[repoName]) {
+        print(`⚠️ Repository already exists`, 'error');
+      } else {
+        gitRepos[repoName] = {
+          url: repoUrl,
+          cloned: new Date().toISOString(),
+          branch: 'main',
+          commits: [{ hash: 'init', message: 'Initial clone', author: 'Termux User', date: new Date().toISOString() }]
+        };
+        saveGitRepos();
+
+        // Create directory structure
+        fs[`/home/${repoName}/`] = '';
+        fs[`/home/${repoName}/README.md`] = '# DARK-DDoS\n\nPowerful DDoS tool\n\n## Installation\n```bash\nnpm install\npython3 MASTER-DDOS.py\n```';
+        fs[`/home/${repoName}/package.json`] = JSON.stringify({
+          name: 'dark-ddos',
+          version: '1.0.0',
+          dependencies: {
+            'requests': '^2.26.0',
+            'https-proxy-agent': '^5.0.0',
+            'crypto-random-string': '^5.0.0',
+            'events': '^3.3.0',
+            'fs': '^0.0.1-security',
+            'net': '^1.0.2',
+            'cloudscraper': '^4.6.0',
+            'request': '^2.88.2',
+            'hcaptcha-solver': '^1.0.0',
+            'randomstring': '^1.2.0',
+            'cluster': '^0.7.7',
+            'cloudflare-bypasser': '^1.0.0'
+          }
+        }, null, 2);
+        fs[`/home/${repoName}/requirements.txt`] = 'requests>=2.26.0\ncolorama>=0.4.4\npysocks>=1.7.1\npycryptodome>=3.14.0';
+        fs[`/home/${repoName}/MASTER-DDOS.py`] = `#!/usr/bin/env python3
+# DARK-DDoS Master Script
+print("DARK-DDoS Tool Loaded Successfully!")
+print("This is a simulation for demonstration purposes.")
+print("In a real environment, this would execute the DDoS tool.")`;
+        saveFS();
+        print(`✅ Repository cloned to /home/${repoName}`, 'success');
+      }
+
+      // Step 3: Install npm dependencies
+      print('');
+      print('📦 Installing npm dependencies...', 'package');
+      const npmPackages = [
+        'requests', 'https-proxy-agent', 'crypto-random-string', 'events',
+        'fs', 'net', 'cloudscraper', 'request', 'hcaptcha-solver',
+        'randomstring', 'cluster', 'cloudflare-bypasser'
+      ];
+      for (const pkg of npmPackages) {
+        print(`  ↳ Installing ${pkg}...`, 'package');
+        // Simulate installation
+        if (!installedPackages[`npm-${pkg}`]) {
+          installedPackages[`npm-${pkg}`] = 'latest';
+          print(`    ✅ ${pkg} installed`, 'success');
+        } else {
+          print(`    ⏭️ ${pkg} already installed`, 'package');
+        }
+      }
+      savePackages();
+
+      // Step 4: Install Python requirements
+      print('');
+      print('🐍 Installing Python dependencies...', 'package');
+      const pipPackages = ['requests', 'colorama', 'pysocks', 'pycryptodome'];
+      for (const pkg of pipPackages) {
+        print(`  ↳ Installing ${pkg}...`, 'package');
+        if (!installedPackages[`pip-${pkg}`]) {
+          installedPackages[`pip-${pkg}`] = 'latest';
+          print(`    ✅ ${pkg} installed`, 'success');
+        } else {
+          print(`    ⏭️ ${pkg} already installed`, 'package');
+        }
+      }
+      savePackages();
+
+      // Step 5: Download Google Chrome
+      print('');
+      print('🌐 Downloading Google Chrome...', 'download');
+      fs['/home/google-chrome-stable_current_amd64.deb'] = 'Simulated Google Chrome .deb package';
+      saveFS();
+      print('✅ google-chrome-stable_current_amd64.deb downloaded', 'success');
+
+      // Step 6: Install Chrome
+      print('');
+      print('📦 Installing Google Chrome...', 'package');
+      print('  ↳ Processing...', 'package');
+      print('  ↳ Setting up google-chrome-stable', 'package');
+      print('  ↳ Chrome installed successfully', 'success');
+
+      // Step 7: Set ulimit
+      print('');
+      print('⚙️ Setting ulimit...', 'system');
+      print('  ↳ ulimit -n 999999', 'system');
+      print('  ↳ File descriptor limit set to 999999', 'success');
+
+      // Step 8: Set permissions
+      print('');
+      print('🔒 Setting permissions...', 'system');
+      print('  ↳ chmod 777 *', 'system');
+      print('  ↳ Permissions set for all files', 'success');
+
+      // Step 9: Launch
+      print('');
+      print('╔═══════════════════════════════════════════════════════╗', 'system');
+      print('║         🚀 DARK-DDoS Installation Complete!          ║', 'system');
+      print('╚═══════════════════════════════════════════════════════╝', 'system');
+      print('');
+      print('📌 To start DARK-DDoS:', 'system');
+      print('  $ cd /home/DARK-DDoS', 'system');
+      print('  $ python3 MASTER-DDOS.py', 'system');
+      print('');
+      print('⚠️  WARNING: This tool is for educational purposes only!', 'error');
+      print('⚠️  Unauthorized use is illegal and unethical.', 'error');
+    }
+
+    // Command executor
     function executeCommand(cmdLine) {
       const parts = cmdLine.trim().split(/\s+/);
       const cmd = parts[0] ? parts[0].toLowerCase() : '';
@@ -445,7 +680,409 @@
         output.push({ line, type });
       }
 
-      // --- commands ---
+      // --- APT-GET Package Manager ---
+      if (cmd === 'apt-get' || cmd === 'apt') {
+        const subCmd = args[0]?.toLowerCase() || '';
+        const pkgName = args[1] || '';
+        const isYes = args.includes('-y');
+
+        if (subCmd === 'install') {
+          if (!pkgName) {
+            print('apt-get install: missing package name', 'error');
+            return output;
+          }
+
+          // Special handling for DARK-DDoS installation
+          if (pkgName === 'dark-ddos' || pkgName === 'DARK-DDoS') {
+            installDarkDdos(output);
+            return output;
+          }
+
+          // Simulate package installation
+          if (installedPackages[pkgName]) {
+            print(`${pkgName} is already the newest version (${installedPackages[pkgName]})`, 'package');
+          } else {
+            print(`Reading package lists... Done`, 'system');
+            print(`Building dependency tree... Done`, 'system');
+            print(`The following NEW packages will be installed:`, 'system');
+            print(`  ${pkgName}`, 'system');
+            if (isYes) {
+              print(`0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.`, 'system');
+              print(`Need to get 0 B of archives.`, 'system');
+              print(`After this operation, 0 B of additional disk space will be used.`, 'system');
+              print(`Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 ${pkgName} [1.0.0]`, 'package');
+              print(`Fetched 0 B in 0s (0 B/s)`, 'system');
+              print(`Selecting previously unselected package ${pkgName}.`, 'system');
+              print(`(Reading database ... 0 files and directories currently installed.)`, 'system');
+              print(`Preparing to unpack .../${pkgName}.deb ...`, 'system');
+              print(`Unpacking ${pkgName} (1.0.0) ...`, 'system');
+              print(`Setting up ${pkgName} (1.0.0) ...`, 'system');
+              installedPackages[pkgName] = '1.0.0';
+              savePackages();
+              print(`✅ ${pkgName} installed successfully`, 'success');
+            } else {
+              print(`Package ${pkgName} not installed. Use -y to confirm.`, 'error');
+            }
+          }
+        } else if (subCmd === 'remove' || subCmd === 'purge') {
+          if (installedPackages[pkgName]) {
+            delete installedPackages[pkgName];
+            savePackages();
+            print(`✅ ${pkgName} removed successfully`, 'success');
+          } else {
+            print(`Package ${pkgName} is not installed`, 'error');
+          }
+        } else if (subCmd === 'update') {
+          print(`Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease`, 'system');
+          print(`Get:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]`, 'system');
+          print(`Fetched 114 kB in 0s (0 B/s)`, 'system');
+          print(`Reading package lists... Done`, 'system');
+          print(`All packages are up to date.`, 'success');
+        } else if (subCmd === 'upgrade') {
+          print(`Calculating upgrade... Done`, 'system');
+          print(`The following packages will be upgraded:`, 'system');
+          print(`  0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.`, 'system');
+          print(`All packages are up to date.`, 'success');
+        } else {
+          print(`apt-get: '${subCmd}' is not a valid command`, 'error');
+        }
+        return output;
+      }
+
+      // --- PIP Package Manager ---
+      if (cmd === 'pip3' || cmd === 'pip') {
+        const subCmd = args[0]?.toLowerCase() || '';
+        const pkgName = args[1] || '';
+
+        if (subCmd === 'install') {
+          if (!pkgName) {
+            print('pip install: missing package name', 'error');
+            return output;
+          }
+          if (pkgName === '-r') {
+            const reqFile = args[2] || 'requirements.txt';
+            print(`Collecting packages from ${reqFile}...`, 'package');
+            const packages = ['requests', 'colorama', 'pysocks', 'pycryptodome'];
+            for (const pkg of packages) {
+              print(`  Downloading ${pkg}...`, 'package');
+              installedPackages[`pip-${pkg}`] = 'latest';
+              print(`  ✅ ${pkg} installed`, 'success');
+            }
+            savePackages();
+            print(`✅ All packages installed successfully`, 'success');
+            return output;
+          }
+          print(`Collecting ${pkgName}...`, 'package');
+          print(`  Downloading ${pkgName}-latest.tar.gz`, 'package');
+          print(`  Installing collected packages: ${pkgName}`, 'package');
+          installedPackages[`pip-${pkgName}`] = 'latest';
+          savePackages();
+          print(`✅ ${pkgName} installed successfully`, 'success');
+        } else if (subCmd === 'uninstall') {
+          if (installedPackages[`pip-${pkgName}`]) {
+            delete installedPackages[`pip-${pkgName}`];
+            savePackages();
+            print(`✅ ${pkgName} uninstalled`, 'success');
+          } else {
+            print(`Package ${pkgName} is not installed`, 'error');
+          }
+        } else if (subCmd === 'list') {
+          const pipPackages = Object.keys(installedPackages).filter(k => k.startsWith('pip-'));
+          if (pipPackages.length === 0) {
+            print('No pip packages installed');
+          } else {
+            for (const pkg of pipPackages) {
+              print(`${pkg.replace('pip-', '')} (${installedPackages[pkg]})`, 'package');
+            }
+          }
+        } else {
+          print(`pip: '${subCmd}' is not a valid command`, 'error');
+        }
+        return output;
+      }
+
+      // --- NPM Package Manager ---
+      if (cmd === 'npm') {
+        const subCmd = args[0]?.toLowerCase() || '';
+        const pkgName = args[1] || '';
+
+        if (subCmd === 'install' || subCmd === 'i') {
+          if (!pkgName) {
+            // Install from package.json
+            print('npm install: reading package.json...', 'package');
+            print('  added 42 packages from 18 contributors', 'package');
+            print('  audited 42 packages in 0.5s', 'package');
+            print('  found 0 vulnerabilities', 'success');
+            return output;
+          }
+          if (pkgName === '-g') {
+            const globalPkg = args[2] || '';
+            if (globalPkg) {
+              print(`Installing ${globalPkg} globally...`, 'package');
+              installedPackages[`npm-global-${globalPkg}`] = 'latest';
+              savePackages();
+              print(`✅ ${globalPkg} installed globally`, 'success');
+            }
+            return output;
+          }
+          print(`npm install: Installing ${pkgName}...`, 'package');
+          print(`  + ${pkgName}@1.0.0`, 'package');
+          installedPackages[`npm-${pkgName}`] = '1.0.0';
+          savePackages();
+          print(`✅ ${pkgName} installed`, 'success');
+        } else if (subCmd === 'uninstall') {
+          if (installedPackages[`npm-${pkgName}`]) {
+            delete installedPackages[`npm-${pkgName}`];
+            savePackages();
+            print(`✅ ${pkgName} uninstalled`, 'success');
+          } else {
+            print(`Package ${pkgName} is not installed`, 'error');
+          }
+        } else if (subCmd === 'list' || subCmd === 'ls') {
+          const npmPackages = Object.keys(installedPackages).filter(k => k.startsWith('npm-'));
+          if (npmPackages.length === 0) {
+            print('No npm packages installed');
+          } else {
+            for (const pkg of npmPackages) {
+              print(`${pkg.replace('npm-', '')}@${installedPackages[pkg]}`, 'package');
+            }
+          }
+        } else {
+          print(`npm: '${subCmd}' is not a valid command`, 'error');
+        }
+        return output;
+      }
+
+      // --- WGET Downloader ---
+      if (cmd === 'wget') {
+        const url = args[0] || '';
+        if (!url) {
+          print('wget: missing URL', 'error');
+          return output;
+        }
+        const fileName = url.split('/').pop() || 'downloaded.file';
+        print(`--${new Date().toISOString()}--  ${url}`, 'download');
+        print(`Resolving ${url.split('/')[2]}...`, 'download');
+        print(`Connecting to ${url.split('/')[2]}|... connected.`, 'download');
+        print(`HTTP request sent, awaiting response... 200 OK`, 'download');
+        print(`Length: unspecified [text/plain]`, 'download');
+        print(`Saving to: '${fileName}'`, 'download');
+        print(`     0K .......... .......... .......... .......... ..........  0%`, 'download');
+        print(`   100K .......... .......... .......... .......... ..........  100%`, 'download');
+        print(`${fileName} saved [100K]`, 'success');
+        
+        // Save to filesystem
+        fs[`/home/${fileName}`] = `Downloaded from ${url}\nSimulated content for demonstration.`;
+        saveFS();
+        return output;
+      }
+
+      // --- GIT commands (full) ---
+      if (cmd === 'git') {
+        const subCmd = args[0]?.toLowerCase() || '';
+        const rest = args.slice(1);
+
+        if (subCmd === 'clone') {
+          const repoUrl = rest[0];
+          if (!repoUrl) {
+            print('git clone: missing repository URL', 'error');
+            return output;
+          }
+          const repoName = repoUrl.split('/').pop().replace('.git', '');
+          const repoPath = `/home/${repoName}`;
+          
+          if (gitRepos[repoName]) {
+            print(`git clone: destination path '${repoName}' already exists`, 'error');
+            return output;
+          }
+
+          gitRepos[repoName] = {
+            url: repoUrl,
+            cloned: new Date().toISOString(),
+            branch: 'main',
+            commits: [{ hash: 'abc123', message: 'Initial commit', author: 'Termux User', date: new Date().toISOString() }]
+          };
+          saveGitRepos();
+
+          fs[repoPath + '/'] = '';
+          fs[repoPath + '/README.md'] = `# ${repoName}\n\nCloned from ${repoUrl}\n\n## Files\n- README.md`;
+          fs[repoPath + '/.git/config'] = `[remote "origin"]\n\turl = ${repoUrl}\n\tfetch = +refs/heads/*:refs/remotes/origin/*`;
+          fs[repoPath + '/.git/HEAD'] = 'ref: refs/heads/main';
+          saveFS();
+          
+          print(`git clone: Cloned repository '${repoName}' from ${repoUrl}`, 'success');
+          return output;
+        }
+
+        if (subCmd === 'init') {
+          const repoName = rest[0] || 'myrepo';
+          const repoPath = `/home/${repoName}`;
+          
+          if (gitRepos[repoName]) {
+            print(`git init: repository '${repoName}' already exists`, 'error');
+            return output;
+          }
+
+          gitRepos[repoName] = {
+            url: 'local',
+            cloned: new Date().toISOString(),
+            branch: 'main',
+            commits: [{ hash: 'init', message: 'Initialized empty repository', author: 'Termux User', date: new Date().toISOString() }]
+          };
+          saveGitRepos();
+
+          fs[repoPath + '/'] = '';
+          fs[repoPath + '/README.md'] = `# ${repoName}\n\nInitialized repository`;
+          fs[repoPath + '/.git/config'] = '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n[init]\n\tdefaultBranch = main';
+          fs[repoPath + '/.git/HEAD'] = 'ref: refs/heads/main';
+          saveFS();
+          
+          print(`git init: Initialized empty repository '${repoName}'`, 'success');
+          return output;
+        }
+
+        if (subCmd === 'status') {
+          const repoName = cwd.split('/').pop();
+          if (gitRepos[repoName]) {
+            print(`On branch ${gitRepos[repoName].branch || 'main'}`, 'git');
+            print('Changes to be committed:', 'git');
+            print('  (use "git add <file>..." to update what will be committed)', 'git');
+            print('  no changes added to commit', 'git');
+          } else {
+            print(`git status: Not a git repository`, 'error');
+          }
+          return output;
+        }
+
+        if (subCmd === 'add') {
+          print(`git add: Adding files ${rest.join(', ')}`, 'success');
+          print('  ↳ Files staged successfully', 'git');
+          return output;
+        }
+
+        if (subCmd === 'commit') {
+          const msgIndex = rest.indexOf('-m');
+          const message = msgIndex !== -1 ? rest.slice(msgIndex + 1).join(' ') : 'Updated files';
+          const repoName = cwd.split('/').pop();
+          
+          if (gitRepos[repoName]) {
+            const commit = {
+              hash: Math.random().toString(36).substring(2, 8),
+              message: message,
+              author: 'Termux User',
+              date: new Date().toISOString()
+            };
+            gitRepos[repoName].commits.push(commit);
+            saveGitRepos();
+            print(`git commit: [${commit.hash}] ${message}`, 'success');
+            print(`  ↳ 1 file changed, 1 insertion(+)`, 'git');
+          } else {
+            print(`git commit: Not a git repository`, 'error');
+          }
+          return output;
+        }
+
+        if (subCmd === 'log') {
+          const repoName = cwd.split('/').pop();
+          if (gitRepos[repoName]) {
+            const commits = gitRepos[repoName].commits || [];
+            for (let i = commits.length - 1; i >= 0; i--) {
+              const c = commits[i];
+              print(`commit ${c.hash}`, 'git');
+              print(`Author: ${c.author}`, 'git');
+              print(`Date:   ${new Date(c.date).toLocaleString()}`, 'git');
+              print(`    ${c.message}`, 'git');
+              if (i > 0) print('', 'git');
+            }
+          } else {
+            print(`git log: Not a git repository`, 'error');
+          }
+          return output;
+        }
+
+        if (subCmd === 'push') {
+          const remote = rest[0] || 'origin';
+          const branch = rest[1] || 'main';
+          print(`git push: Pushing to ${remote}/${branch}`, 'success');
+          print(`  ↳ Everything up-to-date`, 'git');
+          return output;
+        }
+
+        if (subCmd === 'pull') {
+          const remote = rest[0] || 'origin';
+          const branch = rest[1] || 'main';
+          print(`git pull: Pulling from ${remote}/${branch}`, 'success');
+          print(`  ↳ Already up to date.`, 'git');
+          return output;
+        }
+
+        if (subCmd === 'branch') {
+          const repoName = cwd.split('/').pop();
+          if (gitRepos[repoName]) {
+            print(`* ${gitRepos[repoName].branch || 'main'}`, 'git');
+          } else {
+            print(`git branch: Not a git repository`, 'error');
+          }
+          return output;
+        }
+
+        if (subCmd === 'checkout') {
+          const branch = rest[0] || 'main';
+          const repoName = cwd.split('/').pop();
+          if (gitRepos[repoName]) {
+            gitRepos[repoName].branch = branch;
+            saveGitRepos();
+            print(`git checkout: Switched to branch '${branch}'`, 'success');
+          } else {
+            print(`git checkout: Not a git repository`, 'error');
+          }
+          return output;
+        }
+
+        print(`git: '${subCmd}' is not a git command. See 'git --help'.`, 'error');
+        return output;
+      }
+
+      // --- ULIMIT ---
+      if (cmd === 'ulimit') {
+        const option = args[0] || '';
+        if (option === '-n') {
+          const value = args[1] || '999999';
+          print(`ulimit -n ${value}`, 'system');
+          print(`  ↳ File descriptor limit set to ${value}`, 'success');
+        } else {
+          print(`ulimit: '${option}' is not a valid option`, 'error');
+        }
+        return output;
+      }
+
+      // --- CHMOD ---
+      if (cmd === 'chmod') {
+        const perms = args[0] || '';
+        const target = args[1] || '';
+        if (!perms || !target) {
+          print('chmod: missing permissions or target', 'error');
+          return output;
+        }
+        print(`chmod: changing permissions of '${target}' to ${perms}`, 'system');
+        print(`  ↳ Permissions updated successfully`, 'success');
+        return output;
+      }
+
+      // --- CD ---
+      if (cmd === 'cd') {
+        let target = args[0] ? resolvePath(args[0]) : '/home';
+        if (target === '') target = '/home';
+        if (fs.hasOwnProperty(target + '/') || target === '/') {
+          cwd = target;
+          print(`cd: ${cwd}`, 'system');
+        } else {
+          print(`cd: '${args[0] || ''}': No such directory`, 'error');
+        }
+        return output;
+      }
+
+      // --- Other regular commands ---
       if (cmd === 'echo') {
         print(args.join(' '));
       } else if (cmd === 'help') {
@@ -463,7 +1100,29 @@
         print('  whoami                print user');
         print('  date                  show current date');
         print('  uname                 system info');
-        print('  history               show last 5 commands (fake)');
+        print('  history               show command history');
+        print('── Package Manager ──', 'system');
+        print('  apt-get install [pkg] install package');
+        print('  apt-get remove [pkg]  remove package');
+        print('  apt-get update        update package lists');
+        print('  apt-get upgrade       upgrade packages');
+        print('  pip3 install [pkg]    install Python package');
+        print('  pip3 install -r [file] install from requirements');
+        print('  npm install [pkg]     install Node.js package');
+        print('  wget [url]            download file');
+        print('── Git Commands ──', 'system');
+        print('  git clone [url]       clone a repository');
+        print('  git init [name]       initialize a repository');
+        print('  git status            show working tree status');
+        print('  git add [files]       add files to staging');
+        print('  git commit -m [msg]   commit changes');
+        print('  git log               show commit history');
+        print('  git push              push to remote');
+        print('  git pull              pull from remote');
+        print('  git branch            list branches');
+        print('  git checkout [branch] switch branches');
+        print('── DARK-DDoS ──', 'system');
+        print('  apt-get install dark-ddos  install DARK-DDoS tool');
         print('─────────────────────────', 'system');
       } else if (cmd === 'ls') {
         let target = args[0] ? resolvePath(args[0]) : cwd;
@@ -558,6 +1217,11 @@
           const toRemove = Object.keys(fs).filter(k => k === target + '/' || k.startsWith(prefix));
           for (const k of toRemove) delete fs[k];
           delete fs[target + '/'];
+          const repoName = target.split('/').pop();
+          if (gitRepos[repoName]) {
+            delete gitRepos[repoName];
+            saveGitRepos();
+          }
           saveFS();
           print(`rm: removed '${args[0]}' (recursive)`, 'success');
           return output;
@@ -566,15 +1230,6 @@
           delete fs[target];
           saveFS();
           print(`rm: removed '${args[0]}'`, 'success');
-        }
-      } else if (cmd === 'cd') {
-        let target = args[0] ? resolvePath(args[0]) : '/home';
-        if (target === '') target = '/home';
-        if (fs.hasOwnProperty(target + '/') || target === '/') {
-          cwd = target;
-          print(`cd: ${cwd}`, 'system');
-        } else {
-          print(`cd: '${args[0] || ''}': No such directory`, 'error');
         }
       } else if (cmd === 'pwd') {
         print(cwd);
@@ -592,6 +1247,13 @@
         print(' 3  echo "hello"');
         print(' 4  pwd');
         print(' 5  touch demo.txt');
+        print(' 6  apt-get install dark-ddos');
+        print(' 7  git clone https://github.com/MASTERBOYK/DARK-DDoS.git');
+        print(' 8  cd DARK-DDoS');
+        print(' 9  npm i requests');
+        print(' 10  pip3 install -r requirements.txt');
+        print(' 11  chmod 777 *');
+        print(' 12  python3 MASTER-DDOS.py');
       } else {
         print(`command not found: ${cmd}`, 'error');
       }
@@ -620,10 +1282,9 @@
       }
       if (raw.trim() === 'clear') {
         output.innerHTML = '';
-        // Re-add system messages
-        printToConsole('⏣ Termux console · file database + API', 'system');
-        printToConsole('⏣ type \'help\' for available commands', 'system');
-        printToConsole('⏣ API key generated on page load', 'system');
+        printToConsole('⏣ Termux console · Full Package Manager', 'system');
+        printToConsole('⏣ Commands: apt-get, pip, npm, wget, git', 'system');
+        printToConsole('⏣ DARK-DDoS installation workflow ready', 'system');
         printToConsole('─', 'system');
       }
       input.value = '';
@@ -676,13 +1337,20 @@
       }
     });
 
-    // ------ API Endpoint (client-side interception) ------
+    // Install DARK-DDoS button
+    document.getElementById('installDdosBtn').addEventListener('click', () => {
+      printToConsole('$ apt-get install dark-ddos -y', 'system');
+      const results = executeCommand('apt-get install dark-ddos -y');
+      for (const r of results) {
+        printToConsole(r.line, r.type);
+      }
+    });
+
+    // ------ API Endpoint (client-side) ------
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
-      // Check if it's our API endpoint
       if (typeof url === 'string' && (url === '/api/termux' || url.endsWith('/api/termux'))) {
         return new Promise((resolve) => {
-          // Get API key from headers
           const apiKeyHeader = options?.headers?.['X-API-Key'] || 
                               options?.headers?.get?.('X-API-Key') ||
                               options?.headers?.['x-api-key'];
@@ -725,12 +1393,10 @@
             return;
           }
 
-          // Execute command
           const results = executeCommand(command);
           const outputLines = results.map(r => r.line);
           const hasError = results.some(r => r.type === 'error');
           
-          // Log to console
           printToConsole(`🌐 API call: ${command}`, 'api');
           for (const r of results) {
             if (r.type !== 'system') {
@@ -755,27 +1421,29 @@
     // ------ Init ------
     loadFS();
     loadApiKey();
+    loadGitRepos();
+    loadPackages();
     updateFileCount();
     input.focus();
 
-    // Show API endpoint
     document.getElementById('apiEndpoint').textContent = window.location.origin + '/api/termux';
 
-    // Console info
-    printToConsole('🔑 API system initialized (client-side). Use X-API-Key header.', 'api');
+    printToConsole('📦 Package Manager initialized', 'package');
     printToConsole(`🔑 Current API Key: ${apiKey}`, 'api');
+    printToConsole('💀 Type "apt-get install dark-ddos" to install DARK-DDoS', 'system');
     printToConsole('─', 'system');
 
     // Expose for debugging
     window.__fs = fs;
     window.__apiKey = apiKey;
+    window.__gitRepos = gitRepos;
+    window.__packages = installedPackages;
     
-    // Welcome message
-    console.log('%c🚀 Termux Web Console + API', 'font-size: 20px; font-weight: bold;');
+    console.log('%c💀 DARK-DDoS Ready', 'font-size: 20px; font-weight: bold; color: #ff4444;');
     console.log(`%c🔑 API Key: ${apiKey}`, 'color: #9cdcfe;');
-    console.log('%c📁 Files stored in localStorage', 'color: #8bc34a;');
-    console.log('%c✅ Ready for Vercel deployment!', 'color: #81c9e0;');
+    console.log('%c📦 Packages: ' + Object.keys(installedPackages).length, 'color: #7cb8f0;');
+    console.log('%c✅ Type "apt-get install dark-ddos" to install', 'color: #8bc34a;');
   })();
 </script>
 </body>
-</html>
+  </html>
