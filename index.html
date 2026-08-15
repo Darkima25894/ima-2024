@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termux · web console with API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0a0e14;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 16px;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .terminal {
+      background: #141a20;
+      width: 100%;
+      height: 60vh;
+      max-height: 500px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .terminal-header {
+      background: #1e2730;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #2f3b48;
+    }
+    .dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #28c840; }
+    .terminal-title {
+      color: #b7c9d6;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      margin-left: 8px;
+      opacity: 0.7;
+    }
+    .console-wrap {
+      flex: 1;
+      padding: 16px 20px 12px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: #0e1419;
+      scroll-behavior: smooth;
+    }
+    .console-wrap::-webkit-scrollbar {
+      width: 8px;
+    }
+    .console-wrap::-webkit-scrollbar-track {
+      background: #1a232c;
+    }
+    .console-wrap::-webkit-scrollbar-thumb {
+      background: #3e4d5e;
+      border-radius: 20px;
+    }
+    .output-line {
+      color: #d4e2ed;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 2px;
+    }
+    .output-line.error {
+      color: #f28b82;
+    }
+    .output-line.success {
+      color: #8bc34a;
+    }
+    .output-line.system {
+      color: #81c9e0;
+      font-style: italic;
+    }
+    .output-line.api {
+      color: #ffd54f;
+      background: #1a1f2a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #ffd54f;
+    }
+    .input-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 20px 14px 20px;
+      border-top: 1px solid #1f2b35;
+    }
+    .prompt {
+      color: #9bb7d4;
+      font-weight: 600;
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+    #cmdInput {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #e3edf5;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      flex: 1;
+      padding: 6px 0;
+      caret-color: #9cdcfe;
+    }
+    #cmdInput::placeholder {
+      color: #3e4f5e;
+      font-weight: 300;
+    }
+    .status-bar {
+      background: #111a21;
+      padding: 6px 20px;
+      border-top: 1px solid #1f2b35;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #5a7388;
+    }
+    .status-bar span {
+      letter-spacing: 0.3px;
+    }
+    .badge {
+      background: #1e2b36;
+      padding: 2px 12px;
+      border-radius: 40px;
+      color: #95b3cc;
+    }
+    .api-section {
+      background: #141a20;
+      border-radius: 20px;
+      padding: 20px 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
+    }
+    .api-section h3 {
+      color: #b7c9d6;
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .api-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .api-controls input {
+      background: #1a232c;
+      border: 1px solid #2f3b48;
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: #d4e2ed;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      flex: 1;
+      min-width: 200px;
+      outline: none;
+    }
+    .api-controls input:focus {
+      border-color: #4a6a8a;
+    }
+    .btn {
+      background: #1e2b36;
+      border: 1px solid #2f3b48;
+      border-radius: 8px;
+      padding: 8px 18px;
+      color: #b7c9d6;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #2a3a48;
+      border-color: #4a6a8a;
+    }
+    .btn-primary {
+      background: #2a5a7a;
+      border-color: #3a7a9a;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #3a6a8a;
+      border-color: #4a8aaa;
+    }
+    .btn-danger {
+      background: #5a2a2a;
+      border-color: #7a3a3a;
+      color: #ff8a8a;
+    }
+    .btn-danger:hover {
+      background: #6a3a3a;
+      border-color: #8a4a4a;
+    }
+    .api-key-display {
+      background: #0a0e14;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid #2f3b48;
+      color: #9cdcfe;
+      font-size: 0.85rem;
+      flex: 1;
+      min-width: 200px;
+      word-break: break-all;
+    }
+    .api-info {
+      color: #5a7388;
+      font-size: 0.75rem;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #0a0e14;
+      border-radius: 8px;
+      border-left: 3px solid #2a5a7a;
+    }
+    .api-info code {
+      color: #9cdcfe;
+      background: #141a20;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    .vercel-badge {
+      background: #000;
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-left: 8px;
+    }
+    @media (max-width: 600px) {
+      .terminal { height: 50vh; max-height: 50vh; }
+      .api-controls { flex-direction: column; align-items: stretch; }
+      .api-key-display { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="terminal">
+    <div class="terminal-header">
+      <div>
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <span class="terminal-title">termux · web + API</span>
+      <span class="vercel-badge">▲ VERCEL</span>
+      <span style="flex:1;"></span>
+      <span style="color:#3d5366; font-size:0.8rem;">⬢ v2.0</span>
+    </div>
+    <div class="console-wrap" id="consoleOutput">
+      <div class="output-line system">⏣ Termux console · file database + API</div>
+      <div class="output-line system">⏣ type 'help' for available commands</div>
+      <div class="output-line system">⏣ API key generated on page load</div>
+      <div class="output-line" style="margin-top:6px;">─</div>
+    </div>
+    <div class="input-line">
+      <span class="prompt">$</span>
+      <input type="text" id="cmdInput" placeholder="type command …" autofocus spellcheck="false" autocomplete="off">
+    </div>
+    <div class="status-bar">
+      <span>📁 virtual files: <span id="fileCount">0</span></span>
+      <span class="badge">🔑 API ready (client-side)</span>
+    </div>
+  </div>
+
+  <div class="api-section">
+    <h3>🔑 API Key Management</h3>
+    <div class="api-controls">
+      <div class="api-key-display" id="apiKeyDisplay">Loading...</div>
+      <button class="btn btn-primary" id="generateApiKeyBtn">🔄 Generate New</button>
+      <button class="btn btn-danger" id="revokeApiKeyBtn">🗑️ Revoke</button>
+      <button class="btn" id="copyApiKeyBtn">📋 Copy</button>
+    </div>
+    <div class="api-info">
+      <strong>🔗 API Endpoint:</strong> <code id="apiEndpoint">/api/termux</code> &nbsp;|&nbsp;
+      <strong>Method:</strong> <code>POST</code> &nbsp;|&nbsp;
+      <strong>Headers:</strong> <code>X-API-Key: YOUR_KEY</code> &nbsp;|&nbsp;
+      <strong>Body:</strong> <code>{"command": "ls -la"}</code>
+      <br>
+      <span style="color:#5a7388; font-size:0.7rem;">💡 API executes commands on client-side (localStorage). All commands are logged to console.</span>
+      <br>
+      <span style="color:#5a7388; font-size:0.7rem;">✅ This works on Vercel as a static site. No serverless functions needed.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ------ FILE DATABASE (client-side localStorage) ------
+    const STORAGE_KEY = 'termux_fs_db';
+    const API_KEY_STORAGE = 'termux_api_key';
+    let fs = {};
+    let apiKey = '';
+
+    // Load or generate API key
+    function loadApiKey() {
+      const stored = localStorage.getItem(API_KEY_STORAGE);
+      if (stored) {
+        apiKey = stored;
+      } else {
+        apiKey = generateApiKey();
+        localStorage.setItem(API_KEY_STORAGE, apiKey);
+      }
+      document.getElementById('apiKeyDisplay').textContent = apiKey;
+    }
+
+    function generateApiKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let key = 'tmx_';
+      for (let i = 0; i < 32; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return key;
+    }
+
+    function saveApiKey(key) {
+      apiKey = key;
+      localStorage.setItem(API_KEY_STORAGE, key);
+      document.getElementById('apiKeyDisplay').textContent = key;
+    }
+
+    // Load FS
+    function loadFS() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed === 'object' && parsed !== null) {
+            fs = parsed;
+            return;
+          }
+        }
+      } catch (_) {}
+      fs = {
+        '/home/welcome.txt': 'Welcome to Termux web!\nUse "ls", "cat", "echo", "touch", "rm", "mkdir", "cd", "pwd"',
+        '/home/.profile': 'alias ll="ls -l"',
+      };
+      saveFS();
+    }
+    function saveFS() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(fs));
+      } catch (_) {}
+      updateFileCount();
+    }
+    function updateFileCount() {
+      const count = Object.keys(fs).filter(p => !p.endsWith('/')).length;
+      document.getElementById('fileCount').textContent = count;
+    }
+
+    // Path utilities
+    function normalizePath(raw) {
+      if (!raw || raw.trim() === '') return '/';
+      let p = raw.trim().replace(/\\/g, '/');
+      if (!p.startsWith('/')) {
+        p = (cwd === '/' ? '' : cwd) + '/' + p;
+      }
+      p = p.replace(/\/+/g, '/');
+      while (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
+      const parts = p.split('/').filter(seg => seg !== '..' && seg !== '.');
+      if (parts.length === 0) return '/';
+      return '/' + parts.join('/');
+    }
+
+    let cwd = '/home';
+
+    function resolvePath(raw) {
+      if (!raw || raw.trim() === '') return cwd;
+      return normalizePath(raw);
+    }
+
+    function listDirectory(dirPath) {
+      const base = dirPath === '/' ? '' : dirPath;
+      const prefix = base + '/';
+      const entries = new Set();
+      for (const key of Object.keys(fs)) {
+        if (key === dirPath) continue;
+        if (key.startsWith(prefix) || (dirPath === '/' && !key.includes('/') && key !== '')) {
+          let relative = key.slice(prefix.length);
+          if (!relative) continue;
+          if (relative.endsWith('/')) {
+            entries.add(relative.slice(0, -1));
+          } else {
+            const parts = relative.split('/');
+            if (parts.length === 1) {
+              entries.add(parts[0]);
+            } else {
+              entries.add(parts[0]);
+            }
+          }
+        }
+      }
+      for (const key of Object.keys(fs)) {
+        if (key.endsWith('/') && key !== '/') {
+          const parent = key.slice(0, -1);
+          if (parent === dirPath || (dirPath === '/' && !parent.includes('/'))) {
+            const name = parent.split('/').pop();
+            if (name) entries.add(name);
+          }
+        }
+      }
+      return Array.from(entries).sort();
+    }
+
+    // Command executor (returns output array)
+    function executeCommand(cmdLine) {
+      const parts = cmdLine.trim().split(/\s+/);
+      const cmd = parts[0] ? parts[0].toLowerCase() : '';
+      const args = parts.slice(1);
+      const output = [];
+
+      function print(line, type = '') {
+        output.push({ line, type });
+      }
+
+      // --- commands ---
+      if (cmd === 'echo') {
+        print(args.join(' '));
+      } else if (cmd === 'help') {
+        print('── Termux (web) commands ──', 'system');
+        print('  echo   [text]        print text');
+        print('  ls     [path]        list files');
+        print('  cat    [file]        show file content');
+        print('  touch  [file]        create empty file');
+        print('  rm     [file]        remove file/dir (recursive)');
+        print('  mkdir  [dir]         create directory');
+        print('  cd     [dir]         change directory');
+        print('  pwd                   print working directory');
+        print('  clear                 clear console');
+        print('  help                  show this help');
+        print('  whoami                print user');
+        print('  date                  show current date');
+        print('  uname                 system info');
+        print('  history               show last 5 commands (fake)');
+        print('─────────────────────────', 'system');
+      } else if (cmd === 'ls') {
+        let target = args[0] ? resolvePath(args[0]) : cwd;
+        if (!fs.hasOwnProperty(target + '/') && target !== '/') {
+          if (fs.hasOwnProperty(target)) {
+            print(target.split('/').pop());
+          } else {
+            print(`ls: cannot access '${args[0]}': No such file or directory`, 'error');
+          }
+          return output;
+        }
+        const entries = listDirectory(target);
+        if (entries.length === 0) {
+          print('(empty)');
+        } else {
+          print(entries.join('  '));
+        }
+      } else if (cmd === 'cat') {
+        if (args.length === 0) {
+          print('cat: missing file operand', 'error');
+          return output;
+        }
+        const filePath = resolvePath(args[0]);
+        if (fs.hasOwnProperty(filePath) && !filePath.endsWith('/')) {
+          print(fs[filePath]);
+        } else if (fs.hasOwnProperty(filePath + '/')) {
+          print(`cat: '${args[0]}' is a directory`, 'error');
+        } else {
+          print(`cat: '${args[0]}': No such file`, 'error');
+        }
+      } else if (cmd === 'touch') {
+        if (args.length === 0) {
+          print('touch: missing file operand', 'error');
+          return output;
+        }
+        const filePath = resolvePath(args[0]);
+        if (filePath === '/') {
+          print('touch: cannot touch root', 'error');
+          return output;
+        }
+        if (fs.hasOwnProperty(filePath + '/')) {
+          print(`touch: '${args[0]}' is a directory`, 'error');
+          return output;
+        }
+        fs[filePath] = '';
+        saveFS();
+        print(`touch: created '${args[0]}'`, 'success');
+      } else if (cmd === 'mkdir') {
+        if (args.length === 0) {
+          print('mkdir: missing operand', 'error');
+          return output;
+        }
+        const dirPath = resolvePath(args[0]);
+        if (dirPath === '/') {
+          print('mkdir: cannot create root', 'error');
+          return output;
+        }
+        if (fs.hasOwnProperty(dirPath) && !dirPath.endsWith('/')) {
+          print(`mkdir: cannot create directory '${args[0]}': File exists`, 'error');
+          return output;
+        }
+        if (fs.hasOwnProperty(dirPath + '/')) {
+          print(`mkdir: '${args[0]}' already exists`, 'error');
+          return output;
+        }
+        fs[dirPath + '/'] = '';
+        saveFS();
+        print(`mkdir: created '${args[0]}'`, 'success');
+      } else if (cmd === 'rm') {
+        if (args.length === 0) {
+          print('rm: missing operand', 'error');
+          return output;
+        }
+        let target = resolvePath(args[0]);
+        if (target === '/') {
+          print('rm: cannot remove root', 'error');
+          return output;
+        }
+        const recursive = args.includes('-r') || args.includes('-R');
+        const isDir = fs.hasOwnProperty(target + '/');
+        const isFile = fs.hasOwnProperty(target) && !target.endsWith('/');
+        if (!isDir && !isFile) {
+          print(`rm: cannot remove '${args[0]}': No such file or directory`, 'error');
+          return output;
+        }
+        if (isDir && !recursive) {
+          print(`rm: '${args[0]}' is a directory (use -r)`, 'error');
+          return output;
+        }
+        if (isDir && recursive) {
+          const prefix = target + '/';
+          const toRemove = Object.keys(fs).filter(k => k === target + '/' || k.startsWith(prefix));
+          for (const k of toRemove) delete fs[k];
+          delete fs[target + '/'];
+          saveFS();
+          print(`rm: removed '${args[0]}' (recursive)`, 'success');
+          return output;
+        }
+        if (isFile) {
+          delete fs[target];
+          saveFS();
+          print(`rm: removed '${args[0]}'`, 'success');
+        }
+      } else if (cmd === 'cd') {
+        let target = args[0] ? resolvePath(args[0]) : '/home';
+        if (target === '') target = '/home';
+        if (fs.hasOwnProperty(target + '/') || target === '/') {
+          cwd = target;
+          print(`cd: ${cwd}`, 'system');
+        } else {
+          print(`cd: '${args[0] || ''}': No such directory`, 'error');
+        }
+      } else if (cmd === 'pwd') {
+        print(cwd);
+      } else if (cmd === 'clear') {
+        // handled separately
+      } else if (cmd === 'whoami') {
+        print('termux-user');
+      } else if (cmd === 'date') {
+        print(new Date().toString());
+      } else if (cmd === 'uname') {
+        print('Termux web  ·  Linux  (emulated)');
+      } else if (cmd === 'history') {
+        print(' 1  help');
+        print(' 2  ls');
+        print(' 3  echo "hello"');
+        print(' 4  pwd');
+        print(' 5  touch demo.txt');
+      } else {
+        print(`command not found: ${cmd}`, 'error');
+      }
+      return output;
+    }
+
+    // ------ UI Console ------
+    const input = document.getElementById('cmdInput');
+    const output = document.getElementById('consoleOutput');
+
+    function printToConsole(line, type = '') {
+      const div = document.createElement('div');
+      div.className = 'output-line' + (type ? ' ' + type : '');
+      div.textContent = line;
+      output.appendChild(div);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function handleCommand() {
+      const raw = input.value.trim();
+      if (raw === '') return;
+      printToConsole(`$ ${raw}`, 'system');
+      const results = executeCommand(raw);
+      for (const r of results) {
+        printToConsole(r.line, r.type);
+      }
+      if (raw.trim() === 'clear') {
+        output.innerHTML = '';
+        // Re-add system messages
+        printToConsole('⏣ Termux console · file database + API', 'system');
+        printToConsole('⏣ type \'help\' for available commands', 'system');
+        printToConsole('⏣ API key generated on page load', 'system');
+        printToConsole('─', 'system');
+      }
+      input.value = '';
+      updateFileCount();
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleCommand();
+      }
+    });
+
+    document.querySelector('.terminal').addEventListener('click', (e) => {
+      if (e.target.closest('.input-line') === null) {
+        input.focus();
+      }
+    });
+
+    // ------ API Key management ------
+    document.getElementById('generateApiKeyBtn').addEventListener('click', () => {
+      const newKey = generateApiKey();
+      saveApiKey(newKey);
+      printToConsole(`🔑 New API key generated: ${newKey}`, 'api');
+    });
+
+    document.getElementById('revokeApiKeyBtn').addEventListener('click', () => {
+      localStorage.removeItem(API_KEY_STORAGE);
+      apiKey = '';
+      document.getElementById('apiKeyDisplay').textContent = '⚠️ No API key (revoked)';
+      printToConsole('🗑️ API key revoked. Generate a new one.', 'api');
+    });
+
+    document.getElementById('copyApiKeyBtn').addEventListener('click', () => {
+      const key = document.getElementById('apiKeyDisplay').textContent;
+      if (key && !key.includes('No API')) {
+        navigator.clipboard.writeText(key).then(() => {
+          printToConsole('📋 API key copied to clipboard!', 'api');
+        }).catch(() => {
+          const textarea = document.createElement('textarea');
+          textarea.value = key;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          printToConsole('📋 API key copied!', 'api');
+        });
+      } else {
+        printToConsole('⚠️ No valid API key to copy.', 'error');
+      }
+    });
+
+    // ------ API Endpoint (client-side interception) ------
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      // Check if it's our API endpoint
+      if (typeof url === 'string' && (url === '/api/termux' || url.endsWith('/api/termux'))) {
+        return new Promise((resolve) => {
+          // Get API key from headers
+          const apiKeyHeader = options?.headers?.['X-API-Key'] || 
+                              options?.headers?.get?.('X-API-Key') ||
+                              options?.headers?.['x-api-key'];
+          
+          if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+            resolve(new Response(JSON.stringify({
+              error: 'Invalid or missing API key',
+              status: 401,
+              message: 'Please provide a valid X-API-Key header'
+            }), {
+              status: 401,
+              headers: { 'Content-Type': 'application/json' }
+            }));
+            return;
+          }
+
+          let body;
+          try {
+            body = JSON.parse(options?.body || '{}');
+          } catch (_) {
+            resolve(new Response(JSON.stringify({
+              error: 'Invalid JSON body',
+              status: 400
+            }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            }));
+            return;
+          }
+
+          const command = body.command;
+          if (!command) {
+            resolve(new Response(JSON.stringify({
+              error: 'Missing "command" field',
+              status: 400
+            }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            }));
+            return;
+          }
+
+          // Execute command
+          const results = executeCommand(command);
+          const outputLines = results.map(r => r.line);
+          const hasError = results.some(r => r.type === 'error');
+          
+          // Log to console
+          printToConsole(`🌐 API call: ${command}`, 'api');
+          for (const r of results) {
+            if (r.type !== 'system') {
+              printToConsole(`  ↳ ${r.line}`, r.type || '');
+            }
+          }
+
+          resolve(new Response(JSON.stringify({
+            status: hasError ? 'error' : 'success',
+            command: command,
+            output: outputLines,
+            timestamp: new Date().toISOString()
+          }), {
+            status: hasError ? 400 : 200,
+            headers: { 'Content-Type': 'application/json' }
+          }));
+        });
+      }
+      return originalFetch.call(this, url, options);
+    };
+
+    // ------ Init ------
+    loadFS();
+    loadApiKey();
+    updateFileCount();
+    input.focus();
+
+    // Show API endpoint
+    document.getElementById('apiEndpoint').textContent = window.location.origin + '/api/termux';
+
+    // Console info
+    printToConsole('🔑 API system initialized (client-side). Use X-API-Key header.', 'api');
+    printToConsole(`🔑 Current API Key: ${apiKey}`, 'api');
+    printToConsole('─', 'system');
+
+    // Expose for debugging
+    window.__fs = fs;
+    window.__apiKey = apiKey;
+    
+    // Welcome message
+    console.log('%c🚀 Termux Web Console + API', 'font-size: 20px; font-weight: bold;');
+    console.log(`%c🔑 API Key: ${apiKey}`, 'color: #9cdcfe;');
+    console.log('%c📁 Files stored in localStorage', 'color: #8bc34a;');
+    console.log('%c✅ Ready for Vercel deployment!', 'color: #81c9e0;');
+  })();
+</script>
+</body>
+</html>

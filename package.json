@@ -1,0 +1,14 @@
+{
+  "name": "termux-console",
+  "version": "1.0.0",
+  "description": "Termux web console with API",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel deploy --prod"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
