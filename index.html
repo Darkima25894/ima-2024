@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Termux · Full Package Manager + DARK-DDoS</title>
+  <title>Termux · All Tools Pre-Installed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -24,7 +24,7 @@
     }
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1400px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -32,8 +32,8 @@
     .terminal {
       background: #141a20;
       width: 100%;
-      height: 70vh;
-      max-height: 600px;
+      height: 55vh;
+      max-height: 500px;
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
       display: flex;
@@ -42,11 +42,12 @@
     }
     .terminal-header {
       background: #1e2730;
-      padding: 14px 22px;
+      padding: 12px 22px;
       display: flex;
       align-items: center;
       gap: 12px;
       border-bottom: 1px solid #2f3b48;
+      flex-wrap: wrap;
     }
     .dot {
       display: inline-block;
@@ -68,7 +69,7 @@
     }
     .console-wrap {
       flex: 1;
-      padding: 16px 20px 12px 20px;
+      padding: 12px 16px 12px 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -87,8 +88,8 @@
     }
     .output-line {
       color: #d4e2ed;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
       margin-bottom: 2px;
@@ -131,11 +132,26 @@
       border-radius: 4px;
       border-left: 3px solid #f0a030;
     }
+    .output-line.tool {
+      color: #ff6b6b;
+      background: #2a0a0a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #ff6b6b;
+      font-weight: 600;
+    }
+    .output-line.tool-success {
+      color: #51cf66;
+      background: #0a2a0a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #51cf66;
+    }
     .input-line {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 20px 14px 20px;
+      padding: 6px 16px 12px 16px;
       border-top: 1px solid #1f2b35;
     }
     .prompt {
@@ -150,7 +166,7 @@
       outline: none;
       color: #e3edf5;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       flex: 1;
       padding: 6px 0;
       caret-color: #9cdcfe;
@@ -161,21 +177,24 @@
     }
     .status-bar {
       background: #111a21;
-      padding: 6px 20px;
+      padding: 4px 16px;
       border-top: 1px solid #1f2b35;
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #5a7388;
+      flex-wrap: wrap;
+      gap: 4px;
     }
     .status-bar span {
       letter-spacing: 0.3px;
     }
     .badge {
       background: #1e2b36;
-      padding: 2px 12px;
+      padding: 2px 10px;
       border-radius: 40px;
       color: #95b3cc;
+      font-size: 0.65rem;
     }
     .badge-git {
       background: #2a1a0a;
@@ -187,10 +206,10 @@
       color: #7cb8f0;
       border: 1px solid #7cb8f0;
     }
-    .badge-ddos {
+    .badge-tool {
       background: #2a0a0a;
-      color: #ff4444;
-      border: 1px solid #ff4444;
+      color: #ff6b6b;
+      border: 1px solid #ff6b6b;
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
@@ -198,39 +217,66 @@
       50% { opacity: 1; }
       100% { opacity: 0.8; }
     }
-    .api-section {
+    .tools-section {
       background: #141a20;
       border-radius: 20px;
-      padding: 20px 24px;
+      padding: 16px 20px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
     }
-    .api-section h3 {
+    .tools-section h3 {
       color: #b7c9d6;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 400;
       margin-bottom: 12px;
       letter-spacing: 0.5px;
     }
-    .api-controls {
-      display: flex;
-      flex-wrap: wrap;
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 12px;
-      align-items: center;
+    }
+    .tool-card {
+      background: #0e1419;
+      border: 1px solid #2a3340;
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: all 0.3s;
+    }
+    .tool-card:hover {
+      border-color: #4a6a8a;
+      background: #141a24;
+    }
+    .tool-card .tool-name {
+      color: #d4e2ed;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .tool-card .tool-desc {
+      color: #5a7388;
+      font-size: 0.7rem;
+      margin-bottom: 8px;
+    }
+    .tool-card .tool-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .btn {
       background: #1e2b36;
       border: 1px solid #2f3b48;
-      border-radius: 8px;
-      padding: 8px 18px;
+      border-radius: 6px;
+      padding: 5px 14px;
       color: #b7c9d6;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: all 0.2s;
     }
     .btn:hover {
       background: #2a3a48;
       border-color: #4a6a8a;
+      transform: scale(1.02);
     }
     .btn-primary {
       background: #2a5a7a;
@@ -241,6 +287,15 @@
       background: #3a6a8a;
       border-color: #4a8aaa;
     }
+    .btn-success {
+      background: #1a5a2a;
+      border-color: #2a7a3a;
+      color: #8bc34a;
+    }
+    .btn-success:hover {
+      background: #2a6a3a;
+      border-color: #3a8a4a;
+    }
     .btn-danger {
       background: #5a2a2a;
       border-color: #7a3a3a;
@@ -249,6 +304,24 @@
     .btn-danger:hover {
       background: #6a3a3a;
       border-color: #8a4a4a;
+    }
+    .btn-warning {
+      background: #5a4a1a;
+      border-color: #7a6a2a;
+      color: #f0a030;
+    }
+    .btn-warning:hover {
+      background: #6a5a2a;
+      border-color: #8a7a3a;
+    }
+    .btn-purple {
+      background: #3a1a5a;
+      border-color: #5a2a7a;
+      color: #b87cf0;
+    }
+    .btn-purple:hover {
+      background: #4a2a6a;
+      border-color: #6a3a8a;
     }
     .btn-git {
       background: #2a1a0a;
@@ -259,45 +332,72 @@
       background: #3a2a1a;
       border-color: #f0a344;
     }
+    .btn-sm {
+      padding: 3px 10px;
+      font-size: 0.65rem;
+    }
+    .api-section {
+      background: #141a20;
+      border-radius: 20px;
+      padding: 16px 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2a3340 inset;
+    }
+    .api-section h3 {
+      color: #b7c9d6;
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .api-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
     .api-key-display {
       background: #0a0e14;
-      padding: 8px 14px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
       border: 1px solid #2f3b48;
       color: #9cdcfe;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       flex: 1;
-      min-width: 200px;
+      min-width: 150px;
       word-break: break-all;
     }
     .api-info {
       color: #5a7388;
-      font-size: 0.75rem;
-      margin-top: 8px;
-      padding: 8px 12px;
+      font-size: 0.7rem;
+      margin-top: 6px;
+      padding: 6px 10px;
       background: #0a0e14;
-      border-radius: 8px;
+      border-radius: 6px;
       border-left: 3px solid #2a5a7a;
     }
     .api-info code {
       color: #9cdcfe;
       background: #141a20;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.75rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.7rem;
     }
     .vercel-badge {
       background: #000;
       color: #fff;
       padding: 2px 10px;
       border-radius: 20px;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       margin-left: 8px;
     }
-    @media (max-width: 600px) {
-      .terminal { height: 60vh; max-height: 60vh; }
+    @media (max-width: 768px) {
+      .terminal { height: 45vh; max-height: 45vh; }
+      .tools-grid { grid-template-columns: 1fr; }
       .api-controls { flex-direction: column; align-items: stretch; }
       .api-key-display { min-width: unset; }
+      .terminal-header { padding: 8px 12px; }
+      .console-wrap { padding: 8px 12px; }
+      .input-line { padding: 4px 12px 10px 12px; }
     }
   </style>
 </head>
@@ -310,16 +410,16 @@
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
       </div>
-      <span class="terminal-title">termux · DARK-DDoS</span>
+      <span class="terminal-title">termux · All Tools Pre-Installed</span>
       <span class="vercel-badge">▲ VERCEL</span>
       <span style="flex:1;"></span>
-      <span style="color:#3d5366; font-size:0.8rem;">⬢ v4.0</span>
+      <span style="color:#3d5366; font-size:0.7rem;">⬢ v5.0</span>
     </div>
     <div class="console-wrap" id="consoleOutput">
-      <div class="output-line system">⏣ Termux console · Full Package Manager</div>
-      <div class="output-line system">⏣ Commands: apt-get, pip, npm, wget, git</div>
-      <div class="output-line system">⏣ DARK-DDoS installation workflow ready</div>
-      <div class="output-line" style="margin-top:6px;">─</div>
+      <div class="output-line system">⏣ Termux console · All tools pre-installed</div>
+      <div class="output-line system">⏣ Tools: Crypto-banning-tools, Tool_Ban_Whatsapp, DARK-DDoS</div>
+      <div class="output-line system">⏣ Click tool buttons below to run</div>
+      <div class="output-line" style="margin-top:4px;">─</div>
     </div>
     <div class="input-line">
       <span class="prompt">$</span>
@@ -329,7 +429,45 @@
       <span>📁 files: <span id="fileCount">0</span></span>
       <span class="badge badge-git">🔀 Git</span>
       <span class="badge badge-package">📦 Packages</span>
-      <span class="badge badge-ddos">💀 DARK-DDoS</span>
+      <span class="badge badge-tool">💀 3 Tools</span>
+    </div>
+  </div>
+
+  <div class="tools-section">
+    <h3>🚀 Quick Launch Tools</h3>
+    <div class="tools-grid">
+      <!-- Tool 1: Crypto-banning-tools -->
+      <div class="tool-card">
+        <div class="tool-name">🔐 Crypto-banning-tools</div>
+        <div class="tool-desc">Cryptocurrency banning tools by CRYPTOLORD25</div>
+        <div class="tool-actions">
+          <button class="btn btn-warning btn-sm" onclick="runTool('crypto-banning-tools')">▶ Run ban.py</button>
+          <button class="btn btn-git btn-sm" onclick="runCommand('cd /home/Crypto-banning-tools && git pull')">🔄 Update</button>
+          <button class="btn btn-sm" onclick="runCommand('cd /home/Crypto-banning-tools && ls -la')">📂 List</button>
+        </div>
+      </div>
+
+      <!-- Tool 2: Tool_Ban_Whatsapp -->
+      <div class="tool-card">
+        <div class="tool-name">📱 Tool_Ban_Whatsapp</div>
+        <div class="tool-desc">WhatsApp banning tool by BayLak-ONE</div>
+        <div class="tool-actions">
+          <button class="btn btn-danger btn-sm" onclick="runTool('tool-ban-whatsapp')">▶ Run main.py</button>
+          <button class="btn btn-git btn-sm" onclick="runCommand('cd /home/Tool_Ban_WhatsappV1.1 && git pull')">🔄 Update</button>
+          <button class="btn btn-sm" onclick="runCommand('cd /home/Tool_Ban_WhatsappV1.1 && ls -la')">📂 List</button>
+        </div>
+      </div>
+
+      <!-- Tool 3: DARK-DDoS -->
+      <div class="tool-card">
+        <div class="tool-name">💀 DARK-DDoS</div>
+        <div class="tool-desc">Advanced DDoS tool by MASTERBOYK</div>
+        <div class="tool-actions">
+          <button class="btn btn-danger btn-sm" onclick="runTool('dark-ddos')">▶ Run MASTER-DDOS.py</button>
+          <button class="btn btn-git btn-sm" onclick="runCommand('cd /home/DARK-DDoS && git pull')">🔄 Update</button>
+          <button class="btn btn-sm" onclick="runCommand('cd /home/DARK-DDoS && ls -la')">📂 List</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -337,18 +475,14 @@
     <h3>🔑 API Key Management</h3>
     <div class="api-controls">
       <div class="api-key-display" id="apiKeyDisplay">Loading...</div>
-      <button class="btn btn-primary" id="generateApiKeyBtn">🔄 Generate New</button>
-      <button class="btn btn-danger" id="revokeApiKeyBtn">🗑️ Revoke</button>
-      <button class="btn" id="copyApiKeyBtn">📋 Copy</button>
-      <button class="btn btn-git" id="installDdosBtn">💀 Install DARK-DDoS</button>
+      <button class="btn btn-primary btn-sm" id="generateApiKeyBtn">🔄 Generate</button>
+      <button class="btn btn-danger btn-sm" id="revokeApiKeyBtn">🗑️ Revoke</button>
+      <button class="btn btn-sm" id="copyApiKeyBtn">📋 Copy</button>
     </div>
     <div class="api-info">
-      <strong>🔗 API Endpoint:</strong> <code id="apiEndpoint">/api/termux</code> &nbsp;|&nbsp;
-      <strong>Method:</strong> <code>POST</code> &nbsp;|&nbsp;
+      <strong>🔗 API:</strong> <code id="apiEndpoint">/api/termux</code> &nbsp;|&nbsp;
       <strong>Headers:</strong> <code>X-API-Key: YOUR_KEY</code> &nbsp;|&nbsp;
-      <strong>Body:</strong> <code>{"command": "apt-get install python3 -y"}</code>
-      <br>
-      <span style="color:#5a7388; font-size:0.7rem;">💡 Supports apt-get, pip, npm, wget, git clone, and DARK-DDoS installation.</span>
+      <strong>Body:</strong> <code>{"command": "python3 /home/DARK-DDoS/MASTER-DDOS.py"}</code>
     </div>
   </div>
 </div>
@@ -365,7 +499,144 @@
     let gitRepos = {};
     let installedPackages = {};
 
-    // Load installed packages
+    // Pre-install all tools and packages
+    function preInstallAll() {
+      // Install all packages
+      const packages = [
+        'git', 'golang', 'perl', 'python3', 'python2', 'python3-pip', 
+        'nodejs', 'npm', 'openssl', 'python', 'requests', 'colorama', 
+        'python-dotenv'
+      ];
+      for (const pkg of packages) {
+        if (!installedPackages[pkg]) {
+          installedPackages[pkg] = 'latest';
+        }
+      }
+      
+      // Install pip packages
+      const pipPackages = ['requests', 'colorama', 'python-dotenv'];
+      for (const pkg of pipPackages) {
+        if (!installedPackages[`pip-${pkg}`]) {
+          installedPackages[`pip-${pkg}`] = 'latest';
+        }
+      }
+
+      // Install npm packages for DARK-DDoS
+      const npmPackages = [
+        'requests', 'https-proxy-agent', 'crypto-random-string', 'events',
+        'fs', 'net', 'cloudscraper', 'request', 'hcaptcha-solver',
+        'randomstring', 'cluster', 'cloudflare-bypasser'
+      ];
+      for (const pkg of npmPackages) {
+        if (!installedPackages[`npm-${pkg}`]) {
+          installedPackages[`npm-${pkg}`] = 'latest';
+        }
+      }
+
+      savePackages();
+
+      // Clone all repositories
+      const repos = [
+        {
+          name: 'Crypto-banning-tools',
+          url: 'https://github.com/CRYPTOLORD25/Crypto-banning-tools.git',
+          files: {
+            'ban.py': `#!/usr/bin/env python3
+# Crypto-banning-tools by CRYPTOLORD25
+print("🔐 Crypto-banning-tools loaded successfully!")
+print("This is a simulation for demonstration purposes.")
+print("In a real environment, this would execute the banning tool.")
+print("⚠️  WARNING: Use responsibly and legally!")
+`,
+            'README.md': '# Crypto-banning-tools\n\nCryptocurrency banning tools\n\n## Usage\n```bash\npython ban.py\n```'
+          }
+        },
+        {
+          name: 'Tool_Ban_WhatsappV1.1',
+          url: 'https://github.com/BayLak-ONE/Tool_Ban_WhatsappV1.1.git',
+          files: {
+            'main.py': `#!/usr/bin/env python3
+# Tool_Ban_Whatsapp by BayLak-ONE
+print("📱 Tool_Ban_Whatsapp loaded successfully!")
+print("This is a simulation for demonstration purposes.")
+print("In a real environment, this would execute the WhatsApp banning tool.")
+print("⚠️  WARNING: Use responsibly and legally!")
+`,
+            'README.md': '# Tool_Ban_Whatsapp\n\nWhatsApp banning tool\n\n## Usage\n```bash\npython main.py\n```'
+          }
+        },
+        {
+          name: 'DARK-DDoS',
+          url: 'https://github.com/MASTERBOYK/DARK-DDoS.git',
+          files: {
+            'MASTER-DDOS.py': `#!/usr/bin/env python3
+# DARK-DDoS by MASTERBOYK
+print("💀 DARK-DDoS Tool Loaded Successfully!")
+print("This is a simulation for demonstration purposes.")
+print("⚠️  WARNING: This tool is for educational purposes only!")
+print("⚠️  Unauthorized use is illegal and unethical.")
+print("")
+print("📌 Commands available:")
+print("  - attack <target> <port> <duration>")
+print("  - stop")
+print("  - status")
+`,
+            'package.json': JSON.stringify({
+              name: 'dark-ddos',
+              version: '1.0.0',
+              dependencies: {
+                'requests': '^2.26.0',
+                'https-proxy-agent': '^5.0.0',
+                'crypto-random-string': '^5.0.0',
+                'events': '^3.3.0',
+                'fs': '^0.0.1-security',
+                'net': '^1.0.2',
+                'cloudscraper': '^4.6.0',
+                'request': '^2.88.2',
+                'hcaptcha-solver': '^1.0.0',
+                'randomstring': '^1.2.0',
+                'cluster': '^0.7.7',
+                'cloudflare-bypasser': '^1.0.0'
+              }
+            }, null, 2),
+            'requirements.txt': 'requests>=2.26.0\ncolorama>=0.4.4\npysocks>=1.7.1\npycryptodome>=3.14.0',
+            'README.md': '# DARK-DDoS\n\nAdvanced DDoS tool\n\n## Installation\n```bash\nnpm install\npip3 install -r requirements.txt\n```\n\n## Usage\n```bash\npython3 MASTER-DDOS.py\n```'
+          }
+        }
+      ];
+
+      for (const repo of repos) {
+        const repoPath = `/home/${repo.name}`;
+        if (!gitRepos[repo.name]) {
+          gitRepos[repo.name] = {
+            url: repo.url,
+            cloned: new Date().toISOString(),
+            branch: 'main',
+            commits: [{ hash: 'preinstalled', message: 'Pre-installed', author: 'Termux User', date: new Date().toISOString() }]
+          };
+          
+          // Create directory
+          fs[repoPath + '/'] = '';
+          
+          // Create files
+          for (const [filename, content] of Object.entries(repo.files)) {
+            fs[repoPath + '/' + filename] = content;
+          }
+          
+          // Create .git directory
+          fs[repoPath + '/.git/config'] = `[remote "origin"]\n\turl = ${repo.url}\n\tfetch = +refs/heads/*:refs/remotes/origin/*`;
+          fs[repoPath + '/.git/HEAD'] = 'ref: refs/heads/main';
+        }
+      }
+      
+      saveGitRepos();
+      saveFS();
+      
+      // Download Chrome
+      fs['/home/google-chrome-stable_current_amd64.deb'] = 'Simulated Google Chrome .deb package (pre-installed)';
+      saveFS();
+    }
+
     function loadPackages() {
       try {
         const raw = localStorage.getItem(PACKAGES_KEY);
@@ -374,15 +645,8 @@
           return;
         }
       } catch (_) {}
-      installedPackages = {
-        'git': '2.30.0',
-        'python3': '3.9.0',
-        'nodejs': '14.17.0',
-        'npm': '6.14.13',
-        'curl': '7.68.0',
-        'wget': '1.20.3'
-      };
-      savePackages();
+      installedPackages = {};
+      preInstallAll();
     }
 
     function savePackages() {
@@ -391,7 +655,6 @@
       } catch (_) {}
     }
 
-    // Load Git repositories
     function loadGitRepos() {
       try {
         const raw = localStorage.getItem(GIT_REPOS_KEY);
@@ -401,7 +664,6 @@
         }
       } catch (_) {}
       gitRepos = {};
-      saveGitRepos();
     }
 
     function saveGitRepos() {
@@ -410,7 +672,6 @@
       } catch (_) {}
     }
 
-    // Load API key
     function loadApiKey() {
       const stored = localStorage.getItem(API_KEY_STORAGE);
       if (stored) {
@@ -437,7 +698,6 @@
       document.getElementById('apiKeyDisplay').textContent = key;
     }
 
-    // Load FS
     function loadFS() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -450,19 +710,20 @@
         }
       } catch (_) {}
       fs = {
-        '/home/welcome.txt': 'Welcome to Termux web!\nUse "ls", "cat", "echo", "touch", "rm", "mkdir", "cd", "pwd"',
-        '/home/.profile': 'alias ll="ls -l"\nalias gs="git status"\nalias python=python3',
-        '/home/README.md': '# Termux Web Console\n\nA web-based Termux emulator with full package manager.',
-        '/home/install.sh': '#!/bin/bash\necho "Installing DARK-DDoS..."\ngit clone https://github.com/MASTERBOYK/DARK-DDoS.git\ncd DARK-DDoS\nnpm install\npython3 MASTER-DDOS.py'
+        '/home/welcome.txt': 'Welcome to Termux web!\nAll tools pre-installed!',
+        '/home/.profile': 'alias ll="ls -l"\nalias gs="git status"\nalias python=python3\nalias cb="cd /home/Crypto-banning-tools && python ban.py"\nalias wb="cd /home/Tool_Ban_WhatsappV1.1 && python main.py"\nalias ddos="cd /home/DARK-DDoS && python3 MASTER-DDOS.py"',
+        '/home/README.md': '# Termux Web Console\n\nAll tools pre-installed:\n- Crypto-banning-tools\n- Tool_Ban_Whatsapp\n- DARK-DDoS',
       };
       saveFS();
     }
+    
     function saveFS() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(fs));
       } catch (_) {}
       updateFileCount();
     }
+    
     function updateFileCount() {
       const count = Object.keys(fs).filter(p => !p.endsWith('/')).length;
       document.getElementById('fileCount').textContent = count;
@@ -522,151 +783,42 @@
       return Array.from(entries).sort();
     }
 
-    // Install DARK-DDoS full workflow
-    function installDarkDdos(output) {
-      function print(line, type = 'package') {
-        output.push({ line, type });
-      }
+    // Tool runners
+    function runTool(toolName) {
+      const commands = {
+        'crypto-banning-tools': [
+          'cd /home/Crypto-banning-tools',
+          'python ban.py'
+        ],
+        'tool-ban-whatsapp': [
+          'cd /home/Tool_Ban_WhatsappV1.1',
+          'python main.py'
+        ],
+        'dark-ddos': [
+          'cd /home/DARK-DDoS',
+          'python3 MASTER-DDOS.py'
+        ]
+      };
 
-      print('╔═══════════════════════════════════════════════════════╗', 'system');
-      print('║         Installing DARK-DDoS Tool Suite              ║', 'system');
-      print('╚═══════════════════════════════════════════════════════╝', 'system');
-      print('');
+      const toolCmds = commands[toolName];
+      if (!toolCmds) return;
 
-      // Step 1: Install packages
-      const packages = ['git', 'golang', 'perl', 'python3', 'python2', 'python3-pip', 'nodejs', 'npm'];
-      for (const pkg of packages) {
-        if (!installedPackages[pkg]) {
-          print(`[${packages.indexOf(pkg) + 1}/${packages.length}] Installing ${pkg}...`, 'package');
-          installedPackages[pkg] = 'latest';
-          print(`✅ ${pkg} installed successfully`, 'success');
-        } else {
-          print(`⏭️ ${pkg} already installed (${installedPackages[pkg]})`, 'package');
+      printToConsole(`🚀 Running ${toolName}...`, 'system');
+      for (const cmd of toolCmds) {
+        printToConsole(`$ ${cmd}`, 'system');
+        const results = executeCommand(cmd);
+        for (const r of results) {
+          printToConsole(r.line, r.type);
         }
       }
-      savePackages();
+    }
 
-      // Step 2: Clone repository
-      print('');
-      print('📥 Cloning DARK-DDoS repository...', 'download');
-      const repoUrl = 'https://github.com/MASTERBOYK/DARK-DDoS.git';
-      const repoName = 'DARK-DDoS';
-      
-      if (gitRepos[repoName]) {
-        print(`⚠️ Repository already exists`, 'error');
-      } else {
-        gitRepos[repoName] = {
-          url: repoUrl,
-          cloned: new Date().toISOString(),
-          branch: 'main',
-          commits: [{ hash: 'init', message: 'Initial clone', author: 'Termux User', date: new Date().toISOString() }]
-        };
-        saveGitRepos();
-
-        // Create directory structure
-        fs[`/home/${repoName}/`] = '';
-        fs[`/home/${repoName}/README.md`] = '# DARK-DDoS\n\nPowerful DDoS tool\n\n## Installation\n```bash\nnpm install\npython3 MASTER-DDOS.py\n```';
-        fs[`/home/${repoName}/package.json`] = JSON.stringify({
-          name: 'dark-ddos',
-          version: '1.0.0',
-          dependencies: {
-            'requests': '^2.26.0',
-            'https-proxy-agent': '^5.0.0',
-            'crypto-random-string': '^5.0.0',
-            'events': '^3.3.0',
-            'fs': '^0.0.1-security',
-            'net': '^1.0.2',
-            'cloudscraper': '^4.6.0',
-            'request': '^2.88.2',
-            'hcaptcha-solver': '^1.0.0',
-            'randomstring': '^1.2.0',
-            'cluster': '^0.7.7',
-            'cloudflare-bypasser': '^1.0.0'
-          }
-        }, null, 2);
-        fs[`/home/${repoName}/requirements.txt`] = 'requests>=2.26.0\ncolorama>=0.4.4\npysocks>=1.7.1\npycryptodome>=3.14.0';
-        fs[`/home/${repoName}/MASTER-DDOS.py`] = `#!/usr/bin/env python3
-# DARK-DDoS Master Script
-print("DARK-DDoS Tool Loaded Successfully!")
-print("This is a simulation for demonstration purposes.")
-print("In a real environment, this would execute the DDoS tool.")`;
-        saveFS();
-        print(`✅ Repository cloned to /home/${repoName}`, 'success');
+    function runCommand(cmd) {
+      printToConsole(`$ ${cmd}`, 'system');
+      const results = executeCommand(cmd);
+      for (const r of results) {
+        printToConsole(r.line, r.type);
       }
-
-      // Step 3: Install npm dependencies
-      print('');
-      print('📦 Installing npm dependencies...', 'package');
-      const npmPackages = [
-        'requests', 'https-proxy-agent', 'crypto-random-string', 'events',
-        'fs', 'net', 'cloudscraper', 'request', 'hcaptcha-solver',
-        'randomstring', 'cluster', 'cloudflare-bypasser'
-      ];
-      for (const pkg of npmPackages) {
-        print(`  ↳ Installing ${pkg}...`, 'package');
-        // Simulate installation
-        if (!installedPackages[`npm-${pkg}`]) {
-          installedPackages[`npm-${pkg}`] = 'latest';
-          print(`    ✅ ${pkg} installed`, 'success');
-        } else {
-          print(`    ⏭️ ${pkg} already installed`, 'package');
-        }
-      }
-      savePackages();
-
-      // Step 4: Install Python requirements
-      print('');
-      print('🐍 Installing Python dependencies...', 'package');
-      const pipPackages = ['requests', 'colorama', 'pysocks', 'pycryptodome'];
-      for (const pkg of pipPackages) {
-        print(`  ↳ Installing ${pkg}...`, 'package');
-        if (!installedPackages[`pip-${pkg}`]) {
-          installedPackages[`pip-${pkg}`] = 'latest';
-          print(`    ✅ ${pkg} installed`, 'success');
-        } else {
-          print(`    ⏭️ ${pkg} already installed`, 'package');
-        }
-      }
-      savePackages();
-
-      // Step 5: Download Google Chrome
-      print('');
-      print('🌐 Downloading Google Chrome...', 'download');
-      fs['/home/google-chrome-stable_current_amd64.deb'] = 'Simulated Google Chrome .deb package';
-      saveFS();
-      print('✅ google-chrome-stable_current_amd64.deb downloaded', 'success');
-
-      // Step 6: Install Chrome
-      print('');
-      print('📦 Installing Google Chrome...', 'package');
-      print('  ↳ Processing...', 'package');
-      print('  ↳ Setting up google-chrome-stable', 'package');
-      print('  ↳ Chrome installed successfully', 'success');
-
-      // Step 7: Set ulimit
-      print('');
-      print('⚙️ Setting ulimit...', 'system');
-      print('  ↳ ulimit -n 999999', 'system');
-      print('  ↳ File descriptor limit set to 999999', 'success');
-
-      // Step 8: Set permissions
-      print('');
-      print('🔒 Setting permissions...', 'system');
-      print('  ↳ chmod 777 *', 'system');
-      print('  ↳ Permissions set for all files', 'success');
-
-      // Step 9: Launch
-      print('');
-      print('╔═══════════════════════════════════════════════════════╗', 'system');
-      print('║         🚀 DARK-DDoS Installation Complete!          ║', 'system');
-      print('╚═══════════════════════════════════════════════════════╝', 'system');
-      print('');
-      print('📌 To start DARK-DDoS:', 'system');
-      print('  $ cd /home/DARK-DDoS', 'system');
-      print('  $ python3 MASTER-DDOS.py', 'system');
-      print('');
-      print('⚠️  WARNING: This tool is for educational purposes only!', 'error');
-      print('⚠️  Unauthorized use is illegal and unethical.', 'error');
     }
 
     // Command executor
@@ -680,76 +832,43 @@ print("In a real environment, this would execute the DDoS tool.")`;
         output.push({ line, type });
       }
 
-      // --- APT-GET Package Manager ---
-      if (cmd === 'apt-get' || cmd === 'apt') {
+      // --- APT-GET ---
+      if (cmd === 'apt-get' || cmd === 'apt' || cmd === 'pkg') {
         const subCmd = args[0]?.toLowerCase() || '';
         const pkgName = args[1] || '';
         const isYes = args.includes('-y');
 
         if (subCmd === 'install') {
           if (!pkgName) {
-            print('apt-get install: missing package name', 'error');
+            print('install: missing package name', 'error');
             return output;
           }
-
-          // Special handling for DARK-DDoS installation
-          if (pkgName === 'dark-ddos' || pkgName === 'DARK-DDoS') {
-            installDarkDdos(output);
-            return output;
-          }
-
-          // Simulate package installation
           if (installedPackages[pkgName]) {
-            print(`${pkgName} is already the newest version (${installedPackages[pkgName]})`, 'package');
+            print(`${pkgName} is already installed (${installedPackages[pkgName]})`, 'package');
           } else {
-            print(`Reading package lists... Done`, 'system');
-            print(`Building dependency tree... Done`, 'system');
-            print(`The following NEW packages will be installed:`, 'system');
-            print(`  ${pkgName}`, 'system');
-            if (isYes) {
-              print(`0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.`, 'system');
-              print(`Need to get 0 B of archives.`, 'system');
-              print(`After this operation, 0 B of additional disk space will be used.`, 'system');
-              print(`Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 ${pkgName} [1.0.0]`, 'package');
-              print(`Fetched 0 B in 0s (0 B/s)`, 'system');
-              print(`Selecting previously unselected package ${pkgName}.`, 'system');
-              print(`(Reading database ... 0 files and directories currently installed.)`, 'system');
-              print(`Preparing to unpack .../${pkgName}.deb ...`, 'system');
-              print(`Unpacking ${pkgName} (1.0.0) ...`, 'system');
-              print(`Setting up ${pkgName} (1.0.0) ...`, 'system');
-              installedPackages[pkgName] = '1.0.0';
-              savePackages();
-              print(`✅ ${pkgName} installed successfully`, 'success');
-            } else {
-              print(`Package ${pkgName} not installed. Use -y to confirm.`, 'error');
-            }
+            print(`Installing ${pkgName}...`, 'package');
+            installedPackages[pkgName] = 'latest';
+            savePackages();
+            print(`✅ ${pkgName} installed successfully`, 'success');
           }
+        } else if (subCmd === 'update' || subCmd === 'upgrade') {
+          print(`Updating package lists... Done`, 'system');
+          print(`All packages are up to date.`, 'success');
         } else if (subCmd === 'remove' || subCmd === 'purge') {
           if (installedPackages[pkgName]) {
             delete installedPackages[pkgName];
             savePackages();
-            print(`✅ ${pkgName} removed successfully`, 'success');
+            print(`✅ ${pkgName} removed`, 'success');
           } else {
             print(`Package ${pkgName} is not installed`, 'error');
           }
-        } else if (subCmd === 'update') {
-          print(`Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease`, 'system');
-          print(`Get:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]`, 'system');
-          print(`Fetched 114 kB in 0s (0 B/s)`, 'system');
-          print(`Reading package lists... Done`, 'system');
-          print(`All packages are up to date.`, 'success');
-        } else if (subCmd === 'upgrade') {
-          print(`Calculating upgrade... Done`, 'system');
-          print(`The following packages will be upgraded:`, 'system');
-          print(`  0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.`, 'system');
-          print(`All packages are up to date.`, 'success');
         } else {
-          print(`apt-get: '${subCmd}' is not a valid command`, 'error');
+          print(`'${subCmd}' is not a valid command`, 'error');
         }
         return output;
       }
 
-      // --- PIP Package Manager ---
+      // --- PIP ---
       if (cmd === 'pip3' || cmd === 'pip') {
         const subCmd = args[0]?.toLowerCase() || '';
         const pkgName = args[1] || '';
@@ -760,24 +879,18 @@ print("In a real environment, this would execute the DDoS tool.")`;
             return output;
           }
           if (pkgName === '-r') {
-            const reqFile = args[2] || 'requirements.txt';
-            print(`Collecting packages from ${reqFile}...`, 'package');
-            const packages = ['requests', 'colorama', 'pysocks', 'pycryptodome'];
-            for (const pkg of packages) {
-              print(`  Downloading ${pkg}...`, 'package');
-              installedPackages[`pip-${pkg}`] = 'latest';
-              print(`  ✅ ${pkg} installed`, 'success');
+            print(`Installing from requirements.txt...`, 'package');
+            const pkgs = ['requests', 'colorama', 'pysocks', 'pycryptodome'];
+            for (const p of pkgs) {
+              installedPackages[`pip-${p}`] = 'latest';
+              print(`  ✅ ${p} installed`, 'success');
             }
             savePackages();
-            print(`✅ All packages installed successfully`, 'success');
             return output;
           }
-          print(`Collecting ${pkgName}...`, 'package');
-          print(`  Downloading ${pkgName}-latest.tar.gz`, 'package');
-          print(`  Installing collected packages: ${pkgName}`, 'package');
           installedPackages[`pip-${pkgName}`] = 'latest';
           savePackages();
-          print(`✅ ${pkgName} installed successfully`, 'success');
+          print(`✅ ${pkgName} installed`, 'success');
         } else if (subCmd === 'uninstall') {
           if (installedPackages[`pip-${pkgName}`]) {
             delete installedPackages[`pip-${pkgName}`];
@@ -787,13 +900,9 @@ print("In a real environment, this would execute the DDoS tool.")`;
             print(`Package ${pkgName} is not installed`, 'error');
           }
         } else if (subCmd === 'list') {
-          const pipPackages = Object.keys(installedPackages).filter(k => k.startsWith('pip-'));
-          if (pipPackages.length === 0) {
-            print('No pip packages installed');
-          } else {
-            for (const pkg of pipPackages) {
-              print(`${pkg.replace('pip-', '')} (${installedPackages[pkg]})`, 'package');
-            }
+          const pkgs = Object.keys(installedPackages).filter(k => k.startsWith('pip-'));
+          for (const p of pkgs) {
+            print(`${p.replace('pip-', '')} (${installedPackages[p]})`, 'package');
           }
         } else {
           print(`pip: '${subCmd}' is not a valid command`, 'error');
@@ -801,33 +910,18 @@ print("In a real environment, this would execute the DDoS tool.")`;
         return output;
       }
 
-      // --- NPM Package Manager ---
+      // --- NPM ---
       if (cmd === 'npm') {
         const subCmd = args[0]?.toLowerCase() || '';
         const pkgName = args[1] || '';
 
         if (subCmd === 'install' || subCmd === 'i') {
           if (!pkgName) {
-            // Install from package.json
             print('npm install: reading package.json...', 'package');
-            print('  added 42 packages from 18 contributors', 'package');
-            print('  audited 42 packages in 0.5s', 'package');
-            print('  found 0 vulnerabilities', 'success');
+            print('  added 42 packages', 'package');
             return output;
           }
-          if (pkgName === '-g') {
-            const globalPkg = args[2] || '';
-            if (globalPkg) {
-              print(`Installing ${globalPkg} globally...`, 'package');
-              installedPackages[`npm-global-${globalPkg}`] = 'latest';
-              savePackages();
-              print(`✅ ${globalPkg} installed globally`, 'success');
-            }
-            return output;
-          }
-          print(`npm install: Installing ${pkgName}...`, 'package');
-          print(`  + ${pkgName}@1.0.0`, 'package');
-          installedPackages[`npm-${pkgName}`] = '1.0.0';
+          installedPackages[`npm-${pkgName}`] = 'latest';
           savePackages();
           print(`✅ ${pkgName} installed`, 'success');
         } else if (subCmd === 'uninstall') {
@@ -838,22 +932,13 @@ print("In a real environment, this would execute the DDoS tool.")`;
           } else {
             print(`Package ${pkgName} is not installed`, 'error');
           }
-        } else if (subCmd === 'list' || subCmd === 'ls') {
-          const npmPackages = Object.keys(installedPackages).filter(k => k.startsWith('npm-'));
-          if (npmPackages.length === 0) {
-            print('No npm packages installed');
-          } else {
-            for (const pkg of npmPackages) {
-              print(`${pkg.replace('npm-', '')}@${installedPackages[pkg]}`, 'package');
-            }
-          }
         } else {
           print(`npm: '${subCmd}' is not a valid command`, 'error');
         }
         return output;
       }
 
-      // --- WGET Downloader ---
+      // --- WGET ---
       if (cmd === 'wget') {
         const url = args[0] || '';
         if (!url) {
@@ -861,23 +946,14 @@ print("In a real environment, this would execute the DDoS tool.")`;
           return output;
         }
         const fileName = url.split('/').pop() || 'downloaded.file';
-        print(`--${new Date().toISOString()}--  ${url}`, 'download');
-        print(`Resolving ${url.split('/')[2]}...`, 'download');
-        print(`Connecting to ${url.split('/')[2]}|... connected.`, 'download');
-        print(`HTTP request sent, awaiting response... 200 OK`, 'download');
-        print(`Length: unspecified [text/plain]`, 'download');
-        print(`Saving to: '${fileName}'`, 'download');
-        print(`     0K .......... .......... .......... .......... ..........  0%`, 'download');
-        print(`   100K .......... .......... .......... .......... ..........  100%`, 'download');
-        print(`${fileName} saved [100K]`, 'success');
-        
-        // Save to filesystem
-        fs[`/home/${fileName}`] = `Downloaded from ${url}\nSimulated content for demonstration.`;
+        print(`Downloading ${fileName}...`, 'download');
+        print(`  ✅ ${fileName} saved`, 'success');
+        fs[`/home/${fileName}`] = `Downloaded from ${url}`;
         saveFS();
         return output;
       }
 
-      // --- GIT commands (full) ---
+      // --- GIT ---
       if (cmd === 'git') {
         const subCmd = args[0]?.toLowerCase() || '';
         const rest = args.slice(1);
@@ -892,7 +968,7 @@ print("In a real environment, this would execute the DDoS tool.")`;
           const repoPath = `/home/${repoName}`;
           
           if (gitRepos[repoName]) {
-            print(`git clone: destination path '${repoName}' already exists`, 'error');
+            print(`Repository '${repoName}' already exists`, 'error');
             return output;
           }
 
@@ -900,146 +976,62 @@ print("In a real environment, this would execute the DDoS tool.")`;
             url: repoUrl,
             cloned: new Date().toISOString(),
             branch: 'main',
-            commits: [{ hash: 'abc123', message: 'Initial commit', author: 'Termux User', date: new Date().toISOString() }]
+            commits: [{ hash: 'init', message: 'Initial clone', author: 'Termux User', date: new Date().toISOString() }]
           };
           saveGitRepos();
 
           fs[repoPath + '/'] = '';
-          fs[repoPath + '/README.md'] = `# ${repoName}\n\nCloned from ${repoUrl}\n\n## Files\n- README.md`;
-          fs[repoPath + '/.git/config'] = `[remote "origin"]\n\turl = ${repoUrl}\n\tfetch = +refs/heads/*:refs/remotes/origin/*`;
+          fs[repoPath + '/README.md'] = `# ${repoName}\n\nCloned from ${repoUrl}`;
+          fs[repoPath + '/.git/config'] = `[remote "origin"]\n\turl = ${repoUrl}`;
           fs[repoPath + '/.git/HEAD'] = 'ref: refs/heads/main';
           saveFS();
           
-          print(`git clone: Cloned repository '${repoName}' from ${repoUrl}`, 'success');
-          return output;
-        }
-
-        if (subCmd === 'init') {
-          const repoName = rest[0] || 'myrepo';
-          const repoPath = `/home/${repoName}`;
-          
-          if (gitRepos[repoName]) {
-            print(`git init: repository '${repoName}' already exists`, 'error');
-            return output;
-          }
-
-          gitRepos[repoName] = {
-            url: 'local',
-            cloned: new Date().toISOString(),
-            branch: 'main',
-            commits: [{ hash: 'init', message: 'Initialized empty repository', author: 'Termux User', date: new Date().toISOString() }]
-          };
-          saveGitRepos();
-
-          fs[repoPath + '/'] = '';
-          fs[repoPath + '/README.md'] = `# ${repoName}\n\nInitialized repository`;
-          fs[repoPath + '/.git/config'] = '[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n[init]\n\tdefaultBranch = main';
-          fs[repoPath + '/.git/HEAD'] = 'ref: refs/heads/main';
-          saveFS();
-          
-          print(`git init: Initialized empty repository '${repoName}'`, 'success');
-          return output;
-        }
-
-        if (subCmd === 'status') {
-          const repoName = cwd.split('/').pop();
-          if (gitRepos[repoName]) {
-            print(`On branch ${gitRepos[repoName].branch || 'main'}`, 'git');
-            print('Changes to be committed:', 'git');
-            print('  (use "git add <file>..." to update what will be committed)', 'git');
-            print('  no changes added to commit', 'git');
-          } else {
-            print(`git status: Not a git repository`, 'error');
-          }
-          return output;
-        }
-
-        if (subCmd === 'add') {
-          print(`git add: Adding files ${rest.join(', ')}`, 'success');
-          print('  ↳ Files staged successfully', 'git');
-          return output;
-        }
-
-        if (subCmd === 'commit') {
-          const msgIndex = rest.indexOf('-m');
-          const message = msgIndex !== -1 ? rest.slice(msgIndex + 1).join(' ') : 'Updated files';
-          const repoName = cwd.split('/').pop();
-          
-          if (gitRepos[repoName]) {
-            const commit = {
-              hash: Math.random().toString(36).substring(2, 8),
-              message: message,
-              author: 'Termux User',
-              date: new Date().toISOString()
-            };
-            gitRepos[repoName].commits.push(commit);
-            saveGitRepos();
-            print(`git commit: [${commit.hash}] ${message}`, 'success');
-            print(`  ↳ 1 file changed, 1 insertion(+)`, 'git');
-          } else {
-            print(`git commit: Not a git repository`, 'error');
-          }
-          return output;
-        }
-
-        if (subCmd === 'log') {
-          const repoName = cwd.split('/').pop();
-          if (gitRepos[repoName]) {
-            const commits = gitRepos[repoName].commits || [];
-            for (let i = commits.length - 1; i >= 0; i--) {
-              const c = commits[i];
-              print(`commit ${c.hash}`, 'git');
-              print(`Author: ${c.author}`, 'git');
-              print(`Date:   ${new Date(c.date).toLocaleString()}`, 'git');
-              print(`    ${c.message}`, 'git');
-              if (i > 0) print('', 'git');
-            }
-          } else {
-            print(`git log: Not a git repository`, 'error');
-          }
-          return output;
-        }
-
-        if (subCmd === 'push') {
-          const remote = rest[0] || 'origin';
-          const branch = rest[1] || 'main';
-          print(`git push: Pushing to ${remote}/${branch}`, 'success');
-          print(`  ↳ Everything up-to-date`, 'git');
+          print(`✅ Cloned ${repoName}`, 'success');
           return output;
         }
 
         if (subCmd === 'pull') {
-          const remote = rest[0] || 'origin';
-          const branch = rest[1] || 'main';
-          print(`git pull: Pulling from ${remote}/${branch}`, 'success');
-          print(`  ↳ Already up to date.`, 'git');
+          print(`git pull: Already up to date.`, 'success');
           return output;
         }
 
-        if (subCmd === 'branch') {
-          const repoName = cwd.split('/').pop();
-          if (gitRepos[repoName]) {
-            print(`* ${gitRepos[repoName].branch || 'main'}`, 'git');
-          } else {
-            print(`git branch: Not a git repository`, 'error');
-          }
+        if (subCmd === 'status') {
+          print(`On branch main`, 'git');
+          print('nothing to commit, working tree clean', 'git');
           return output;
         }
 
-        if (subCmd === 'checkout') {
-          const branch = rest[0] || 'main';
-          const repoName = cwd.split('/').pop();
-          if (gitRepos[repoName]) {
-            gitRepos[repoName].branch = branch;
-            saveGitRepos();
-            print(`git checkout: Switched to branch '${branch}'`, 'success');
-          } else {
-            print(`git checkout: Not a git repository`, 'error');
-          }
+        print(`git: '${subCmd}' is not a git command`, 'error');
+        return output;
+      }
+
+      // --- CD ---
+      if (cmd === 'cd') {
+        let target = args[0] ? resolvePath(args[0]) : '/home';
+        if (target === '') target = '/home';
+        if (fs.hasOwnProperty(target + '/') || target === '/') {
+          cwd = target;
+          print(`cd: ${cwd}`, 'system');
+        } else {
+          print(`cd: '${args[0] || ''}': No such directory`, 'error');
+        }
+        return output;
+      }
+
+      // --- Python execution ---
+      if (cmd === 'python' || cmd === 'python3' || cmd === 'python2') {
+        const script = args[0] || '';
+        if (!script) {
+          print('Python: missing script name', 'error');
           return output;
         }
-
-        print(`git: '${subCmd}' is not a git command. See 'git --help'.`, 'error');
+        const fullPath = resolvePath(script);
+        if (fs.hasOwnProperty(fullPath) && !fullPath.endsWith('/')) {
+          print(`🐍 Running ${script}...`, 'tool');
+          print(fs[fullPath], 'tool-success');
+        } else {
+          print(`python: can't open file '${script}': [Errno 2] No such file or directory`, 'error');
+        }
         return output;
       }
 
@@ -1065,81 +1057,25 @@ print("In a real environment, this would execute the DDoS tool.")`;
           return output;
         }
         print(`chmod: changing permissions of '${target}' to ${perms}`, 'system');
-        print(`  ↳ Permissions updated successfully`, 'success');
+        print(`  ↳ Permissions updated`, 'success');
         return output;
       }
 
-      // --- CD ---
-      if (cmd === 'cd') {
-        let target = args[0] ? resolvePath(args[0]) : '/home';
-        if (target === '') target = '/home';
-        if (fs.hasOwnProperty(target + '/') || target === '/') {
-          cwd = target;
-          print(`cd: ${cwd}`, 'system');
-        } else {
-          print(`cd: '${args[0] || ''}': No such directory`, 'error');
-        }
-        return output;
-      }
-
-      // --- Other regular commands ---
+      // --- Other commands ---
       if (cmd === 'echo') {
         print(args.join(' '));
-      } else if (cmd === 'help') {
-        print('── Termux (web) commands ──', 'system');
-        print('  echo   [text]        print text');
-        print('  ls     [path]        list files');
-        print('  cat    [file]        show file content');
-        print('  touch  [file]        create empty file');
-        print('  rm     [file]        remove file/dir (recursive)');
-        print('  mkdir  [dir]         create directory');
-        print('  cd     [dir]         change directory');
-        print('  pwd                   print working directory');
-        print('  clear                 clear console');
-        print('  help                  show this help');
-        print('  whoami                print user');
-        print('  date                  show current date');
-        print('  uname                 system info');
-        print('  history               show command history');
-        print('── Package Manager ──', 'system');
-        print('  apt-get install [pkg] install package');
-        print('  apt-get remove [pkg]  remove package');
-        print('  apt-get update        update package lists');
-        print('  apt-get upgrade       upgrade packages');
-        print('  pip3 install [pkg]    install Python package');
-        print('  pip3 install -r [file] install from requirements');
-        print('  npm install [pkg]     install Node.js package');
-        print('  wget [url]            download file');
-        print('── Git Commands ──', 'system');
-        print('  git clone [url]       clone a repository');
-        print('  git init [name]       initialize a repository');
-        print('  git status            show working tree status');
-        print('  git add [files]       add files to staging');
-        print('  git commit -m [msg]   commit changes');
-        print('  git log               show commit history');
-        print('  git push              push to remote');
-        print('  git pull              pull from remote');
-        print('  git branch            list branches');
-        print('  git checkout [branch] switch branches');
-        print('── DARK-DDoS ──', 'system');
-        print('  apt-get install dark-ddos  install DARK-DDoS tool');
-        print('─────────────────────────', 'system');
       } else if (cmd === 'ls') {
         let target = args[0] ? resolvePath(args[0]) : cwd;
         if (!fs.hasOwnProperty(target + '/') && target !== '/') {
           if (fs.hasOwnProperty(target)) {
             print(target.split('/').pop());
           } else {
-            print(`ls: cannot access '${args[0]}': No such file or directory`, 'error');
+            print(`ls: cannot access '${args[0]}'`, 'error');
           }
           return output;
         }
         const entries = listDirectory(target);
-        if (entries.length === 0) {
-          print('(empty)');
-        } else {
-          print(entries.join('  '));
-        }
+        print(entries.join('  ') || '(empty)');
       } else if (cmd === 'cat') {
         if (args.length === 0) {
           print('cat: missing file operand', 'error');
@@ -1148,8 +1084,6 @@ print("In a real environment, this would execute the DDoS tool.")`;
         const filePath = resolvePath(args[0]);
         if (fs.hasOwnProperty(filePath) && !filePath.endsWith('/')) {
           print(fs[filePath]);
-        } else if (fs.hasOwnProperty(filePath + '/')) {
-          print(`cat: '${args[0]}' is a directory`, 'error');
         } else {
           print(`cat: '${args[0]}': No such file`, 'error');
         }
@@ -1159,14 +1093,6 @@ print("In a real environment, this would execute the DDoS tool.")`;
           return output;
         }
         const filePath = resolvePath(args[0]);
-        if (filePath === '/') {
-          print('touch: cannot touch root', 'error');
-          return output;
-        }
-        if (fs.hasOwnProperty(filePath + '/')) {
-          print(`touch: '${args[0]}' is a directory`, 'error');
-          return output;
-        }
         fs[filePath] = '';
         saveFS();
         print(`touch: created '${args[0]}'`, 'success');
@@ -1176,18 +1102,6 @@ print("In a real environment, this would execute the DDoS tool.")`;
           return output;
         }
         const dirPath = resolvePath(args[0]);
-        if (dirPath === '/') {
-          print('mkdir: cannot create root', 'error');
-          return output;
-        }
-        if (fs.hasOwnProperty(dirPath) && !dirPath.endsWith('/')) {
-          print(`mkdir: cannot create directory '${args[0]}': File exists`, 'error');
-          return output;
-        }
-        if (fs.hasOwnProperty(dirPath + '/')) {
-          print(`mkdir: '${args[0]}' already exists`, 'error');
-          return output;
-        }
         fs[dirPath + '/'] = '';
         saveFS();
         print(`mkdir: created '${args[0]}'`, 'success');
@@ -1197,15 +1111,11 @@ print("In a real environment, this would execute the DDoS tool.")`;
           return output;
         }
         let target = resolvePath(args[0]);
-        if (target === '/') {
-          print('rm: cannot remove root', 'error');
-          return output;
-        }
         const recursive = args.includes('-r') || args.includes('-R');
         const isDir = fs.hasOwnProperty(target + '/');
         const isFile = fs.hasOwnProperty(target) && !target.endsWith('/');
         if (!isDir && !isFile) {
-          print(`rm: cannot remove '${args[0]}': No such file or directory`, 'error');
+          print(`rm: cannot remove '${args[0]}'`, 'error');
           return output;
         }
         if (isDir && !recursive) {
@@ -1217,11 +1127,6 @@ print("In a real environment, this would execute the DDoS tool.")`;
           const toRemove = Object.keys(fs).filter(k => k === target + '/' || k.startsWith(prefix));
           for (const k of toRemove) delete fs[k];
           delete fs[target + '/'];
-          const repoName = target.split('/').pop();
-          if (gitRepos[repoName]) {
-            delete gitRepos[repoName];
-            saveGitRepos();
-          }
           saveFS();
           print(`rm: removed '${args[0]}' (recursive)`, 'success');
           return output;
@@ -1244,16 +1149,28 @@ print("In a real environment, this would execute the DDoS tool.")`;
       } else if (cmd === 'history') {
         print(' 1  help');
         print(' 2  ls');
-        print(' 3  echo "hello"');
-        print(' 4  pwd');
-        print(' 5  touch demo.txt');
-        print(' 6  apt-get install dark-ddos');
-        print(' 7  git clone https://github.com/MASTERBOYK/DARK-DDoS.git');
-        print(' 8  cd DARK-DDoS');
-        print(' 9  npm i requests');
-        print(' 10  pip3 install -r requirements.txt');
-        print(' 11  chmod 777 *');
-        print(' 12  python3 MASTER-DDOS.py');
+        print(' 3  cd /home/DARK-DDoS');
+        print(' 4  python3 MASTER-DDOS.py');
+      } else if (cmd === 'help') {
+        print('── Commands ──', 'system');
+        print('  echo, ls, cat, touch, rm, mkdir, cd, pwd, clear');
+        print('  whoami, date, uname, history, help');
+        print('── Package Manager ──', 'system');
+        print('  apt-get install [pkg]   install package');
+        print('  apt-get update          update packages');
+        print('  apt-get upgrade         upgrade packages');
+        print('  pip3 install [pkg]      install Python package');
+        print('  npm install [pkg]       install Node.js package');
+        print('  wget [url]              download file');
+        print('── Git ──', 'system');
+        print('  git clone [url]         clone repository');
+        print('  git pull                update repository');
+        print('  git status              show status');
+        print('── Pre-installed Tools ──', 'system');
+        print('  Crypto-banning-tools    /home/Crypto-banning-tools');
+        print('  Tool_Ban_Whatsapp       /home/Tool_Ban_WhatsappV1.1');
+        print('  DARK-DDoS              /home/DARK-DDoS');
+        print('─────────────────────────', 'system');
       } else {
         print(`command not found: ${cmd}`, 'error');
       }
@@ -1282,9 +1199,7 @@ print("In a real environment, this would execute the DDoS tool.")`;
       }
       if (raw.trim() === 'clear') {
         output.innerHTML = '';
-        printToConsole('⏣ Termux console · Full Package Manager', 'system');
-        printToConsole('⏣ Commands: apt-get, pip, npm, wget, git', 'system');
-        printToConsole('⏣ DARK-DDoS installation workflow ready', 'system');
+        printToConsole('⏣ Termux · All tools pre-installed', 'system');
         printToConsole('─', 'system');
       }
       input.value = '';
@@ -1308,21 +1223,21 @@ print("In a real environment, this would execute the DDoS tool.")`;
     document.getElementById('generateApiKeyBtn').addEventListener('click', () => {
       const newKey = generateApiKey();
       saveApiKey(newKey);
-      printToConsole(`🔑 New API key generated: ${newKey}`, 'api');
+      printToConsole(`🔑 New API key: ${newKey}`, 'api');
     });
 
     document.getElementById('revokeApiKeyBtn').addEventListener('click', () => {
       localStorage.removeItem(API_KEY_STORAGE);
       apiKey = '';
-      document.getElementById('apiKeyDisplay').textContent = '⚠️ No API key (revoked)';
-      printToConsole('🗑️ API key revoked. Generate a new one.', 'api');
+      document.getElementById('apiKeyDisplay').textContent = '⚠️ Revoked';
+      printToConsole('🗑️ API key revoked', 'api');
     });
 
     document.getElementById('copyApiKeyBtn').addEventListener('click', () => {
       const key = document.getElementById('apiKeyDisplay').textContent;
-      if (key && !key.includes('No API')) {
+      if (key && !key.includes('Revoked')) {
         navigator.clipboard.writeText(key).then(() => {
-          printToConsole('📋 API key copied to clipboard!', 'api');
+          printToConsole('📋 API key copied!', 'api');
         }).catch(() => {
           const textarea = document.createElement('textarea');
           textarea.value = key;
@@ -1332,21 +1247,10 @@ print("In a real environment, this would execute the DDoS tool.")`;
           document.body.removeChild(textarea);
           printToConsole('📋 API key copied!', 'api');
         });
-      } else {
-        printToConsole('⚠️ No valid API key to copy.', 'error');
       }
     });
 
-    // Install DARK-DDoS button
-    document.getElementById('installDdosBtn').addEventListener('click', () => {
-      printToConsole('$ apt-get install dark-ddos -y', 'system');
-      const results = executeCommand('apt-get install dark-ddos -y');
-      for (const r of results) {
-        printToConsole(r.line, r.type);
-      }
-    });
-
-    // ------ API Endpoint (client-side) ------
+    // ------ API Endpoint ------
     const originalFetch = window.fetch;
     window.fetch = function(url, options) {
       if (typeof url === 'string' && (url === '/api/termux' || url.endsWith('/api/termux'))) {
@@ -1358,8 +1262,7 @@ print("In a real environment, this would execute the DDoS tool.")`;
           if (!apiKeyHeader || apiKeyHeader !== apiKey) {
             resolve(new Response(JSON.stringify({
               error: 'Invalid or missing API key',
-              status: 401,
-              message: 'Please provide a valid X-API-Key header'
+              status: 401
             }), {
               status: 401,
               headers: { 'Content-Type': 'application/json' }
@@ -1397,7 +1300,7 @@ print("In a real environment, this would execute the DDoS tool.")`;
           const outputLines = results.map(r => r.line);
           const hasError = results.some(r => r.type === 'error');
           
-          printToConsole(`🌐 API call: ${command}`, 'api');
+          printToConsole(`🌐 API: ${command}`, 'api');
           for (const r of results) {
             if (r.type !== 'system') {
               printToConsole(`  ↳ ${r.line}`, r.type || '');
@@ -1418,6 +1321,10 @@ print("In a real environment, this would execute the DDoS tool.")`;
       return originalFetch.call(this, url, options);
     };
 
+    // Make functions globally available
+    window.runTool = runTool;
+    window.runCommand = runCommand;
+
     // ------ Init ------
     loadFS();
     loadApiKey();
@@ -1428,21 +1335,16 @@ print("In a real environment, this would execute the DDoS tool.")`;
 
     document.getElementById('apiEndpoint').textContent = window.location.origin + '/api/termux';
 
-    printToConsole('📦 Package Manager initialized', 'package');
-    printToConsole(`🔑 Current API Key: ${apiKey}`, 'api');
-    printToConsole('💀 Type "apt-get install dark-ddos" to install DARK-DDoS', 'system');
+    printToConsole('📦 All packages pre-installed!', 'package');
+    printToConsole('🔀 All tools pre-cloned!', 'git');
+    printToConsole('💀 3 tools ready to run!', 'tool');
+    printToConsole(`🔑 API Key: ${apiKey}`, 'api');
     printToConsole('─', 'system');
-
-    // Expose for debugging
-    window.__fs = fs;
-    window.__apiKey = apiKey;
-    window.__gitRepos = gitRepos;
-    window.__packages = installedPackages;
     
-    console.log('%c💀 DARK-DDoS Ready', 'font-size: 20px; font-weight: bold; color: #ff4444;');
-    console.log(`%c🔑 API Key: ${apiKey}`, 'color: #9cdcfe;');
-    console.log('%c📦 Packages: ' + Object.keys(installedPackages).length, 'color: #7cb8f0;');
-    console.log('%c✅ Type "apt-get install dark-ddos" to install', 'color: #8bc34a;');
+    console.log('%c💀 All Tools Pre-Installed!', 'font-size: 20px; font-weight: bold; color: #ff6b6b;');
+    console.log('📦 Packages: ' + Object.keys(installedPackages).length);
+    console.log('🔀 Repositories: ' + Object.keys(gitRepos).length);
+    console.log('🔑 API Key: ' + apiKey);
   })();
 </script>
 </body>
